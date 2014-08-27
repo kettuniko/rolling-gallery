@@ -8,25 +8,34 @@
 // @require
 // ==/UserScript==
 
-
-showImagesFromPage(0)
-
-function showImagesFromPage(pageNumber) {
-  $.get('page/' + pageNumber + '/hit.json', function (response) {
-    var data = response.data
-
-    if (data.length > 0) {
-      var hashes = _.each(response.data, function (img) {
-        return img.hash
-        //render with timeout
-        // load image smoothly
-
-      })
-      // call showImagesFromPage pageNumber+1
-    } else if (pageNumber > 0) {
-      showImagesFromPage(0)
-    } else {
-      // no content, load funny pic from imgur
-    }
+$(function () {
+  var imageElement = $('<img />').css({
+    'width': '100%',
+    'height': '100%'
   })
-}
+  $('body').empty().append(imageElement).css('overflow', 'hidden')
+
+  showImagesFromPage(0)
+
+  function showImagesFromPage(pageNumber) {
+    $.get('page/' + pageNumber + '/hit.json', function (response) {
+      if (response.data.length > 0) {
+        var imageUrls = _.map(response.data, function (imageData) {
+          return '//i.imgur.com/' + imageData.hash + imageData.ext
+        })
+
+        var i = 0
+        var intervalId = setInterval(function () {
+          if (imageUrls[i]) {
+            imageElement.attr('src', imageUrls[i++])
+          } else {
+            clearInterval(intervalId)
+            showImagesFromPage(pageNumber + 1)
+          }
+        }, 5000);
+      } else {
+        showImagesFromPage(0)
+      }
+    })
+  }
+})
