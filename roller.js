@@ -10,6 +10,14 @@
 
 const imageElement = document.createElement('img')
 
+const setFullscreenImage = () => {
+  imageElement.style.height = `${window.innerHeight}px`
+  imageElement.style.width = `${window.innerWidth}px`
+}
+
+setFullscreenImage()
+window.onresize = setFullscreenImage
+
 document.body.innerHTML = ''
 document.body.appendChild(imageElement)
 document.body.style.overflow = 'hidden'
@@ -37,8 +45,6 @@ function doSlideShow (images) {
   let i = 0
   const intervalId = setInterval(() => {
     if (imageUrls[i]) {
-      imageElement.style.height = `${window.innerHeight}px`
-      imageElement.style.width = `${window.innerWidth}px`
       imageElement.src = imageUrls[i++]
     } else {
       clearInterval(intervalId)
