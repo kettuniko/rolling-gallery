@@ -9,10 +9,10 @@
 // ==/UserScript==
 
 const imageElement = document.createElement('img')
-imageElement.style.height = '100%'
-imageElement.style.width = '100%'
 
-$('body').empty().append(imageElement).css('overflow', 'hidden')
+document.body.innerHTML = ''
+document.body.appendChild(imageElement)
+document.body.style.overflow = 'hidden'
 
 const toImageUrl = imageData => '//i.imgur.com/' + imageData.hash + imageData.ext
 const isNotEditRequest = imageData => !imageData.title.toLowerCase().includes('request')
@@ -34,6 +34,8 @@ function showImagesFromPage (pageNumber) {
       let i = 0
       const intervalId = setInterval(() => {
         if (imageUrls[i]) {
+          imageElement.style.height = `${window.innerHeight}px`
+          imageElement.style.width = `${window.innerWidth}px`
           imageElement.src = imageUrls[i++]
         } else {
           clearInterval(intervalId)
