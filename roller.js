@@ -24,26 +24,26 @@ function showImagesFromPage (pageNumber) {
     .then(response => response.json())
     .then(responseBody => responseBody.data)
     .then(doSlideShow)
+}
 
-  function doSlideShow (images) {
-    if (images.length > 0) {
-      const imageUrls = images
-        .filter(isNotEditRequest)
-        .map(toImageUrl)
+function doSlideShow (images) {
+  if (images.length > 0) {
+    const imageUrls = images
+      .filter(isNotEditRequest)
+      .map(toImageUrl)
 
-      let i = 0
-      const intervalId = setInterval(() => {
-        if (imageUrls[i]) {
-          imageElement.style.height = `${window.innerHeight}px`
-          imageElement.style.width = `${window.innerWidth}px`
-          imageElement.src = imageUrls[i++]
-        } else {
-          clearInterval(intervalId)
-          showImagesFromPage(pageNumber + 1)
-        }
-      }, 5000);
-    } else {
-      showImagesFromPage(0)
-    }
+    let i = 0
+    const intervalId = setInterval(() => {
+      if (imageUrls[i]) {
+        imageElement.style.height = `${window.innerHeight}px`
+        imageElement.style.width = `${window.innerWidth}px`
+        imageElement.src = imageUrls[i++]
+      } else {
+        clearInterval(intervalId)
+        showImagesFromPage(pageNumber + 1)
+      }
+    }, 5000);
+  } else {
+    showImagesFromPage(0)
   }
 }
