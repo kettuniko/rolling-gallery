@@ -15,6 +15,9 @@ $(() => {
   })
   $('body').empty().append(imageElement).css('overflow', 'hidden')
 
+  const toImageUrl = imageData => '//i.imgur.com/' + imageData.hash + imageData.ext
+  const isNotEditRequest = imageData => !imageData.title.toLowerCase().includes('request')
+
   showImagesFromPage(0)
 
   function showImagesFromPage (pageNumber) {
@@ -25,7 +28,9 @@ $(() => {
 
     function doSlideShow (images) {
       if (images.length > 0) {
-        const imageUrls = images.map(imageData => '//i.imgur.com/' + imageData.hash + imageData.ext)
+        const imageUrls = images
+          .filter(isNotEditRequest)
+          .map(toImageUrl)
 
         let i = 0
         const intervalId = setInterval(() => {
