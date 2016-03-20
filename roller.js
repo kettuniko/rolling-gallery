@@ -8,42 +8,40 @@
 // @require
 // ==/UserScript==
 
-$(() => {
-  const imageElement = document.createElement('img')
-  imageElement.style.height = '100%'
-  imageElement.style.width = '100%'
+const imageElement = document.createElement('img')
+imageElement.style.height = '100%'
+imageElement.style.width = '100%'
 
-  $('body').empty().append(imageElement).css('overflow', 'hidden')
+$('body').empty().append(imageElement).css('overflow', 'hidden')
 
-  const toImageUrl = imageData => '//i.imgur.com/' + imageData.hash + imageData.ext
-  const isNotEditRequest = imageData => !imageData.title.toLowerCase().includes('request')
+const toImageUrl = imageData => '//i.imgur.com/' + imageData.hash + imageData.ext
+const isNotEditRequest = imageData => !imageData.title.toLowerCase().includes('request')
 
-  showImagesFromPage(0)
+showImagesFromPage(0)
 
-  function showImagesFromPage (pageNumber) {
-    fetch(window.location.href + '/page/' + pageNumber + '/hit.json')
-      .then(response => response.json())
-      .then(responseBody => responseBody.data)
-      .then(doSlideShow)
+function showImagesFromPage (pageNumber) {
+  fetch(window.location.href + '/page/' + pageNumber + '/hit.json')
+    .then(response => response.json())
+    .then(responseBody => responseBody.data)
+    .then(doSlideShow)
 
-    function doSlideShow (images) {
-      if (images.length > 0) {
-        const imageUrls = images
-          .filter(isNotEditRequest)
-          .map(toImageUrl)
+  function doSlideShow (images) {
+    if (images.length > 0) {
+      const imageUrls = images
+        .filter(isNotEditRequest)
+        .map(toImageUrl)
 
-        let i = 0
-        const intervalId = setInterval(() => {
-          if (imageUrls[i]) {
-            imageElement.src = imageUrls[i++]
-          } else {
-            clearInterval(intervalId)
-            showImagesFromPage(pageNumber + 1)
-          }
-        }, 5000);
-      } else {
-        showImagesFromPage(0)
-      }
+      let i = 0
+      const intervalId = setInterval(() => {
+        if (imageUrls[i]) {
+          imageElement.src = imageUrls[i++]
+        } else {
+          clearInterval(intervalId)
+          showImagesFromPage(pageNumber + 1)
+        }
+      }, 5000);
+    } else {
+      showImagesFromPage(0)
     }
   }
-})
+}
