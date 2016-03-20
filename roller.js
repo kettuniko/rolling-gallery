@@ -20,9 +20,7 @@ $(() => {
   function showImagesFromPage(pageNumber) {
     $.get('page/' + pageNumber + '/hit.json', response => {
       if (response.data.length > 0) {
-        var imageUrls = _.map(response.data, imageData => {
-          return '//i.imgur.com/' + imageData.hash + imageData.ext
-        })
+        var imageUrls = response.data.map(imageData => '//i.imgur.com/' + imageData.hash + imageData.ext)
 
         var i = 0
         var intervalId = setInterval(() => {
