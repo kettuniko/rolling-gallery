@@ -4,7 +4,7 @@
 // @version    0.1
 // @description  Full screen imgur rolling
 // @match      http://imgur.com/r/*/
-// @copyright  2014+, kopzu
+// @copyright  2014+, kettuniko
 // @require
 // ==/UserScript==
 
