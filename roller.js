@@ -17,10 +17,15 @@ $(() => {
 
   showImagesFromPage(0)
 
-  function showImagesFromPage(pageNumber) {
-    $.get(window.location.href + '/page/' + pageNumber + '/hit.json', response => {
-      if (response.data.length > 0) {
-        const imageUrls = response.data.map(imageData => '//i.imgur.com/' + imageData.hash + imageData.ext)
+  function showImagesFromPage (pageNumber) {
+    fetch(window.location.href + '/page/' + pageNumber + '/hit.json')
+      .then(response => response.json())
+      .then(responseBody => responseBody.data)
+      .then(doSlideShow)
+
+    function doSlideShow (images) {
+      if (images.length > 0) {
+        const imageUrls = images.map(imageData => '//i.imgur.com/' + imageData.hash + imageData.ext)
 
         let i = 0
         const intervalId = setInterval(() => {
@@ -34,6 +39,6 @@ $(() => {
       } else {
         showImagesFromPage(0)
       }
-    })
+    }
   }
 })
