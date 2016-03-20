@@ -9,10 +9,10 @@
 // ==/UserScript==
 
 $(() => {
-  const imageElement = $('<img />').css({
-    'width': '100%',
-    'height': '100%'
-  })
+  const imageElement = document.createElement('img')
+  imageElement.style.height = '100%'
+  imageElement.style.width = '100%'
+
   $('body').empty().append(imageElement).css('overflow', 'hidden')
 
   const toImageUrl = imageData => '//i.imgur.com/' + imageData.hash + imageData.ext
@@ -35,7 +35,7 @@ $(() => {
         let i = 0
         const intervalId = setInterval(() => {
           if (imageUrls[i]) {
-            imageElement.attr('src', imageUrls[i++])
+            imageElement.src = imageUrls[i++]
           } else {
             clearInterval(intervalId)
             showImagesFromPage(pageNumber + 1)
