@@ -9,7 +9,7 @@
 // ==/UserScript==
 
 $(() => {
-  var imageElement = $('<img />').css({
+  const imageElement = $('<img />').css({
     'width': '100%',
     'height': '100%'
   })
@@ -20,10 +20,10 @@ $(() => {
   function showImagesFromPage(pageNumber) {
     $.get('page/' + pageNumber + '/hit.json', response => {
       if (response.data.length > 0) {
-        var imageUrls = response.data.map(imageData => '//i.imgur.com/' + imageData.hash + imageData.ext)
+        const imageUrls = response.data.map(imageData => '//i.imgur.com/' + imageData.hash + imageData.ext)
 
-        var i = 0
-        var intervalId = setInterval(() => {
+        let i = 0
+        const intervalId = setInterval(() => {
           if (imageUrls[i]) {
             imageElement.attr('src', imageUrls[i++])
           } else {
