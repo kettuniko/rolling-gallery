@@ -18,7 +18,7 @@ $(() => {
   showImagesFromPage(0)
 
   function showImagesFromPage(pageNumber) {
-    $.get('page/' + pageNumber + '/hit.json', response => {
+    $.get(window.location.href + '/page/' + pageNumber + '/hit.json', response => {
       if (response.data.length > 0) {
         const imageUrls = response.data.map(imageData => '//i.imgur.com/' + imageData.hash + imageData.ext)
 
