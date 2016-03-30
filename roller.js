@@ -32,12 +32,12 @@ function showImagesFromPage (pageNumber) {
     .then(response => response.json())
     .then(responseBody => responseBody.data)
     .then(images => {
-      if (images) doSlideShow(images)
+      if (images) doSlideShow(images, pageNumber)
       else showImagesFromPage(0)
     })
 }
 
-function doSlideShow (images) {
+function doSlideShow (images, pageNumber) {
   const imageUrls = images
     .filter(isNotEditRequest)
     .map(toImageUrl)
