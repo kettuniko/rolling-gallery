@@ -1,54 +1,61 @@
-// ==UserScript==
-// @name       imgur roller
-// @namespace  http://use.i.E.your.homepage/
-// @version    0.1
-// @description  Full screen imgur rolling
-// @match      http://imgur.com/r/*/
-// @copyright  2014+, kettuniko
-// @require
-// ==/UserScript==
-
-const imageElement = document.createElement('img')
-
-const setFullscreenImage = () => {
-  imageElement.style.height = `${window.innerHeight}px`
-  imageElement.style.width = `${window.innerWidth}px`
+const initBody = element => {
+  document.body.innerHTML = ''
+  document.body.appendChild(element)
 }
 
-setFullscreenImage()
-window.onresize = setFullscreenImage
+function toDomNode(html) {
+  const el = document.createElement('template');
+  el.innerHTML = html;
+  return document.importNode(el.content, true);
+}
 
-document.body.innerHTML = ''
-document.body.appendChild(imageElement)
-document.body.style.overflow = 'hidden'
+const createTextElement = text =>
+  toDomNode(`<h1 style="font-size: 100pt; text-align: center; line-height: normal">${text}</h1>`)
 
-const toImageUrl = imageData => '//i.imgur.com/' + imageData.hash + imageData.ext
-const isNotEditRequest = imageData => !imageData.title.toLowerCase().includes('request')
+const createImageElement = src =>
+  toDomNode(`<img style="height: ${window.innerHeight}; width: 100%" src="${src}"/>`)
 
-showImagesFromPage(0)
-
-function showImagesFromPage (pageNumber) {
-  fetch(window.location.href + '/page/' + pageNumber + '/hit.json')
+const showImagesFromPage = pageNumber => {
+  window.fetch(`${window.location.href}/page/${pageNumber}/hit.json`)
     .then(response => response.json())
     .then(responseBody => responseBody.data)
     .then(images => {
       if (images) doSlideShow(images, pageNumber)
-      else showImagesFromPage(0)
+      else if (pageNumber !== 0) showImagesFromPage(0)
+      else createTextElement('Nothing to show :(')
+    })
+    .catch(e => {
+      console.log(e)
+      createTextElement('Error!')
     })
 }
 
-function doSlideShow (images, pageNumber) {
-  const imageUrls = images
+const doSlideShow = (images, pageNumber) =>
+  images
     .filter(isNotEditRequest)
     .map(toImageUrl)
+    .reduce(toSlideShow, Promise.resolve())
+    .then(() => showImagesFromPage(pageNumber + 1))
 
-  let i = 0
-  const intervalId = setInterval(() => {
-    if (imageUrls[i]) {
-      imageElement.src = imageUrls[i++]
-    } else {
-      clearInterval(intervalId)
-      showImagesFromPage(pageNumber + 1)
-    }
-  }, 5000);
-}
+const isNotEditRequest = imageData => !imageData.title.toLowerCase().includes('request')
+const toImageUrl = imageData => `//i.imgur.com/${imageData.hash}${imageData.ext}`
+const cleanUpImage = () => window.URL.revokeObjectURL(document.querySelector('img').src)
+
+const toSlideShow = (sequence, imageUrl) =>
+  sequence
+    .then(() => window.fetch(imageUrl))
+    .then(response => response.blob())
+    .then(window.URL.createObjectURL)
+    .then(createImageElement)
+    .then(initBody)
+    .then(cleanUpImage)
+    .then(pause)
+    .catch(e => {
+      console.log(e)
+      return Promise.resolve()
+    })
+
+const pause = () => new Promise(resolve => setTimeout(resolve, 3000))
+
+initBody(createTextElement('Loading'))
+showImagesFromPage(0)
