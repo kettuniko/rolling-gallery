@@ -9,11 +9,14 @@
     </style>
   </head>
   <body>
-    <h1>Loading...</h1>
+    <div class="content">
+      <h1>Loading...</h1>
+    </div>
     <script type="text/javascript">
-      const initBody = element => {
-        document.body.innerHTML = ''
-        document.body.appendChild(element)
+      const initContent = element => {
+        const content = document.querySelector('.content');
+        content.innerHTML = ''
+        content.appendChild(element)
       }
 
       const toDomNode = html => {
@@ -63,7 +66,7 @@
           .then(response => response.blob())
           .then(window.URL.createObjectURL)
           .then(createImageElement)
-          .then(initBody)
+          .then(initContent)
           .then(cleanUpImage)
           .then(pause)
           .catch(e => {
