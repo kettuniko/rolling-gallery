@@ -16,7 +16,7 @@
         document.body.appendChild(element)
       }
 
-      function toDomNode(html) {
+      const toDomNode = html => {
         const el = document.createElement('template');
         el.innerHTML = html;
         return document.importNode(el.content, true);
