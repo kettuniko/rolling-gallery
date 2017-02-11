@@ -37,17 +37,17 @@
             'Authorization': 'Client-ID 1400c78269df7bc'
           }
         })
-        .then(response => response.json())
-        .then(responseBody => responseBody.data)
-        .then(images => {
-          if (images) doSlideShow(images, pageNumber)
-          else if (pageNumber !== 0) showImagesFromPage(0)
-          else createTextElement('Nothing to show :(')
-        })
-        .catch(e => {
-          console.log(e)
-          createTextElement('Error!')
-        })
+          .then(response => response.json())
+          .then(responseBody => responseBody.data)
+          .then(images => {
+            if (images) doSlideShow(images, pageNumber)
+            else if (pageNumber !== 0) showImagesFromPage(0)
+            else createTextElement('Nothing to show :(')
+          })
+          .catch(e => {
+            console.log(e)
+            createTextElement('Error!')
+          })
 
       const doSlideShow = (images, pageNumber) =>
         images
@@ -79,10 +79,17 @@
       showImagesFromPage(0)
     </script>
     <script>
-      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+      (function (i, s, o, g, r, a, m) {
+        i['GoogleAnalyticsObject'] = r;
+        i[r] = i[r] || function () {
+            (i[r].q = i[r].q || []).push(arguments)
+          }, i[r].l = 1 * new Date();
+        a = s.createElement(o),
+          m = s.getElementsByTagName(o)[0];
+        a.async = 1;
+        a.src = g;
+        m.parentNode.insertBefore(a, m)
+      })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
 
       ga('create', 'UA-91801368-1', 'auto');
       ga('send', 'pageview');
