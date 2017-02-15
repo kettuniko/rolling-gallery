@@ -19,9 +19,7 @@
     </style>
   </head>
   <body>
-    <div class="content">
-      <h1>Loading...</h1>
-    </div>
+    <div class="content"></div>
     <script type="text/javascript">
       class Maybe {
         constructor(x) {
@@ -113,6 +111,8 @@
           })
 
       const pause = () => new Promise(resolve => setTimeout(resolve, 3000))
+
+      initContent(createTextElement('Loading...'))
 
       const gallery = getParameter(location.search)('r').getOrElse('brokengifs')
       showImagesFromPage(gallery)(0)()
