@@ -7,10 +7,6 @@
         padding: 0;
       }
 
-      .content {
-        height: 100%;
-      }
-
       h1 {
         font-size: 100pt;
         text-align: center;
@@ -22,6 +18,11 @@
         height: 100%;
         width: 100%;
       }
+
+      .content {
+        height: 100%;
+      }
+
     </style>
   </head>
   <body>
@@ -68,11 +69,8 @@
         return document.importNode(el.content, true)
       }
 
-      const createTextElement = text =>
-        toDomNode(`<h1>${text}</h1>`)
-
-      const createImageElement = src =>
-        toDomNode(`<img src="${src}"/>`)
+      const createTextElement = text => toDomNode(`<h1>${text}</h1>`)
+      const createImageElement = src => toDomNode(`<img src="${src}"/>`)
 
       const showImagesFromPage = gallery => pageNumber => () =>
         window.fetch(`https://api.imgur.com/3/gallery/r/${gallery}/time/${pageNumber}`, {
