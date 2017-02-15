@@ -78,13 +78,13 @@
           .then(responseBody => responseBody.data)
           .then(images => {
             const galleryPage = showImagesFromPage(gallery)
-            if (images) doSlideShow(images, galleryPage(pageNumber + 1))
+            if (images.length) doSlideShow(images, galleryPage(pageNumber + 1))
             else if (pageNumber !== 0) galleryPage(0)()
-            else createTextElement('Nothing to show :(')
+            else initContent(createTextElement('Nothing to show :('))
           })
           .catch(e => {
             console.log(e)
-            createTextElement('Error!')
+            initContent(createTextElement('Error!'))
           })
 
       const doSlideShow = (images, nextPage) =>
