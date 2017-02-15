@@ -91,12 +91,10 @@
 
       const doSlideShow = (images, nextPage) =>
         images
-          .filter(isNotEditRequest)
           .map(toImageUrl)
           .reduce(toSlideShow, Promise.resolve())
           .then(nextPage)
 
-      const isNotEditRequest = imageData => !imageData.title.toLowerCase().includes('request')
       const toImageUrl = imageData => imageData.link.replace('http://', 'https://')
       const cleanUpImage = () => window.URL.revokeObjectURL(document.querySelector('img').src)
 
