@@ -11,6 +11,12 @@
         height: 100%;
       }
 
+      h1 {
+        font-size: 100pt;
+        text-align: center;
+        line-height: normal
+      }
+
       img {
         object-fit: cover;
         height: 100%;
@@ -63,7 +69,7 @@
       }
 
       const createTextElement = text =>
-        toDomNode(`<h1 style="font-size: 100pt; text-align: center; line-height: normal">${text}</h1>`)
+        toDomNode(`<h1>${text}</h1>`)
 
       const createImageElement = src =>
         toDomNode(`<img src="${src}"/>`)
