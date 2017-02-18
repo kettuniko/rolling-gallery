@@ -40,7 +40,7 @@
       const toDomNode = html => {
         const el = document.createElement('template')
         el.innerHTML = html
-        return document.importNode(el.content, true)
+        return el.content.cloneNode(true)
       }
 
       const createTextElement = text => toDomNode(`<h1>${text}</h1>`)
