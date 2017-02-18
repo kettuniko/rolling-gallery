@@ -18,23 +18,17 @@
         height: 100%;
         width: 100%;
       }
-
-      .content {
-        height: 100%;
-      }
     </style>
   </head>
   <body>
-    <div class="content"></div>
     <script async src="analytics.js"></script>
     <script src="maybe.js"></script>
     <script src="get-parameter.js"></script>
 
     <script type="text/javascript">
       const initContent = element => {
-        const content = document.querySelector('.content')
-        content.innerHTML = ''
-        content.appendChild(element)
+        document.body.innerHTML = ''
+        document.body.appendChild(element)
       }
 
       const toDomNode = html => {
