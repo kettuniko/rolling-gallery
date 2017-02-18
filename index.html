@@ -86,9 +86,9 @@
 
       initContent(createTextElement('Loading...'))
 
-      showImagesFromPage(getParameter(location.search)('r').fold(
-        () => 'brokengifs',
-        gallery => gallery))(0)()
+      showImagesFromPage(getParameter(location.search)('r')
+        .fold(() => 'brokengifs',
+              gallery => gallery))(0)()
     </script>
   </body>
 </html>
