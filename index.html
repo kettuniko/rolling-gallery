@@ -22,42 +22,15 @@
       .content {
         height: 100%;
       }
-
     </style>
-    <script async src="analytics.js"></script>
   </head>
   <body>
     <div class="content"></div>
+    <script async src="analytics.js"></script>
+    <script src="maybe.js"></script>
+    <script src="get-parameter.js"></script>
+
     <script type="text/javascript">
-      class Maybe {
-        constructor(x) {
-          this.__value = x
-        }
-
-        static of(value) {
-          return new this(value)
-        }
-
-        isNothing() {
-          return this.__value === null || typeof this.__value === 'undefined'
-        }
-
-        map(f) {
-          return this.isNothing() ? new Maybe(null) : new Maybe(f(this.__value))
-        }
-
-        getOrElse(defaultValue) {
-          return this.isNothing() ? defaultValue : this.__value
-        }
-      }
-
-      const getParameter = queryString => name =>
-        Maybe.of(queryString)
-          .map(params => params.split(`${name}=`))
-          .map(([_, rest]) => rest)
-          .map(rest => rest.split('&'))
-          .map(([value, _]) => value)
-
       const initContent = element => {
         const content = document.querySelector('.content')
         content.innerHTML = ''
