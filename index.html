@@ -92,8 +92,9 @@
 
       initContent(createTextElement('Loading...'))
 
-      const gallery = getParameter(location.search)('r').getOrElse('brokengifs')
-      showImagesFromPage(gallery)(0)()
+      showImagesFromPage(getParameter(location.search)('r').fold(
+        () => 'brokengifs',
+        gallery => gallery))(0)()
     </script>
   </body>
 </html>

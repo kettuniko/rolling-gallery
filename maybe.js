@@ -15,7 +15,7 @@ class Maybe {
     return this.isNothing() ? new Maybe(null) : new Maybe(f(this.__value))
   }
 
-  getOrElse(defaultValue) {
-    return this.isNothing() ? defaultValue : this.__value
+  fold(f, g) {
+    return this.isNothing() ? f() : g(this.__value)
   }
 }
