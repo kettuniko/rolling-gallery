@@ -51,8 +51,7 @@
           headers: {
             'Authorization': 'Client-ID 1400c78269df7bc'
           }
-        })
-          .then(response => response.json())
+        }).then(response => response.json())
           .then(responseBody => responseBody.data)
           .then(images => {
             const galleryPage = showImagesFromPage(gallery)
