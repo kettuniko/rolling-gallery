@@ -72,16 +72,17 @@
           .then(nextPage)
 
       const toImageUrl = imageData => imageData.link.replace('http://', 'https://')
-      const cleanUpImage = () => window.URL.revokeObjectURL(document.querySelector('img').src)
+      const cleanUpImage = imageUrl => () => window.URL.revokeObjectURL(imageUrl)
 
       const toSlideShow = (sequence, imageUrl) =>
         sequence
           .then(() => window.fetch(imageUrl))
           .then(response => response.blob())
           .then(window.URL.createObjectURL)
-          .then(createImageElement)
-          .then(initContent)
-          .then(cleanUpImage)
+          .then(imageUrl =>
+            new Promise(resolve => resolve(createImageElement(imageUrl)))
+              .then(initContent)
+              .then(cleanUpImage(imageUrl)))
           .then(pause)
           .catch(e => {
             console.log(e)
