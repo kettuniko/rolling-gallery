@@ -40,7 +40,11 @@
     </style>
   </head>
   <body>
-    <div class="main-container"></div>
+    <div class="main-container">
+      <div class="content">
+        <h1>Loading...</h1>
+      </div>
+    </div>
     <script async src="analytics.js"></script>
     <script src="maybe.js"></script>
     <script src="get-parameter.js"></script>
@@ -110,8 +114,6 @@
           })
 
       const pause = () => new Promise(resolve => setTimeout(resolve, 3000))
-
-      initContent(createTextTag('Loading...'))
 
       showImagesFromPage(getParameter(location.search)('r')
         .fold(() => 'brokengifs',
