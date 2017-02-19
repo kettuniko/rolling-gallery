@@ -113,7 +113,6 @@
 
       initContent(createTextTag('Loading...'))
 
-
       showImagesFromPage(getParameter(location.search)('r')
         .fold(() => 'brokengifs',
               gallery => gallery))(0)()
