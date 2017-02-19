@@ -48,6 +48,8 @@
     <script async src="analytics.js"></script>
     <script src="maybe.js"></script>
     <script src="get-parameter.js"></script>
+    <script src="https://jdataview.github.io/dist/jdataview.js"></script>
+    <script src="https://kettuniko.github.io/gify/gify.min.js"></script>
 
     <script type="text/javascript">
       const toDomNode = html => {
@@ -89,23 +91,34 @@
             initContent(createTextTag('Error!'))
           })
 
+      const isDisplayAble = ({link}) => link.includes('i.imgur.com')
+
       const doSlideShow = (images, nextPage) =>
         images
+          .filter(isDisplayAble)
           .map(toImageUrl)
-          .reduce(toSlideShow, {duration: 0, promise: Promise.resolve()})
-          .promise
+          .reduce(toSlideShow, {slideDuration: () => Promise.resolve(0), chain: Promise.resolve()})
+          .chain
           .then(nextPage)
 
       const toImageUrl = imageData => imageData.link.replace('http://', 'https://')
       const cleanUpImage = imageUrl => () => window.URL.revokeObjectURL(imageUrl)
       const pause = duration => new Promise(resolve => setTimeout(resolve, duration))
 
-      const toSlideShow = ({ duration, promise }, imageUrl) => ({
-        duration: 3000,
-        promise: promise
-          .then(() => Promise.all([window.fetch(imageUrl), pause(duration)]))
-          .then(([response]) => response.blob())
-          .then(window.URL.createObjectURL)
+      const readInfo = blob => new Promise((resolve) => {
+        const fileReader = new FileReader()
+        fileReader.onload = () => resolve(gify.getInfo(fileReader.result))
+        fileReader.readAsArrayBuffer(blob);
+      })
+
+      const toDuration = ({animated, duration}) => animated ? duration : 5000
+      const fetchBlob = url => window.fetch(url).then(response => response.blob())
+
+      const toSlideShow = ({ slideDuration, chain }, imageUrl) => ({
+        slideDuration: () => fetchBlob(imageUrl).then(readInfo).then(toDuration),
+        chain: chain
+          .then(() => Promise.all([fetchBlob(imageUrl), slideDuration().then(pause)]))
+          .then(([blob]) => window.URL.createObjectURL(blob))
           .then(imageUrl =>
             new Promise(resolve => resolve(createImageTag(imageUrl)))
               .then(initContent)
