@@ -92,28 +92,29 @@
       const doSlideShow = (images, nextPage) =>
         images
           .map(toImageUrl)
-          .reduce(toSlideShow, Promise.resolve())
+          .reduce(toSlideShow, {duration: 0, promise: Promise.resolve()})
+          .promise
           .then(nextPage)
 
       const toImageUrl = imageData => imageData.link.replace('http://', 'https://')
       const cleanUpImage = imageUrl => () => window.URL.revokeObjectURL(imageUrl)
+      const pause = duration => new Promise(resolve => setTimeout(resolve, duration))
 
-      const toSlideShow = (sequence, imageUrl) =>
-        sequence
-          .then(() => window.fetch(imageUrl))
-          .then(response => response.blob())
+      const toSlideShow = ({ duration, promise }, imageUrl) => ({
+        duration: 3000,
+        promise: promise
+          .then(() => Promise.all([window.fetch(imageUrl), pause(duration)]))
+          .then(([response]) => response.blob())
           .then(window.URL.createObjectURL)
           .then(imageUrl =>
             new Promise(resolve => resolve(createImageTag(imageUrl)))
               .then(initContent)
               .then(cleanUpImage(imageUrl)))
-          .then(pause)
           .catch(e => {
             console.log(e)
             return Promise.resolve()
           })
-
-      const pause = () => new Promise(resolve => setTimeout(resolve, 3000))
+      })
 
       showImagesFromPage(getParameter(location.search)('r')
         .fold(() => 'brokengifs',
