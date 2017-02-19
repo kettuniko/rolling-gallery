@@ -7,10 +7,15 @@
         padding: 0;
       }
 
+      body {
+        overflow: hidden;
+      }
+
       h1 {
         font-size: 100pt;
         text-align: center;
-        line-height: normal
+        line-height: normal;
+        margin: 0;
       }
 
       img {
@@ -18,27 +23,49 @@
         height: 100%;
         width: 100%;
       }
+
+      .main-container {
+        overflow: hidden;
+        width: 200%;
+        height:100%;
+        display: flex;
+      }
+
+      .content {
+        transition: margin-left 0.5s ease-out;
+        width: 50%;
+        height: 100%;
+      }
+
     </style>
   </head>
   <body>
+    <div class="main-container"></div>
     <script async src="analytics.js"></script>
     <script src="maybe.js"></script>
     <script src="get-parameter.js"></script>
 
     <script type="text/javascript">
-      const initContent = element => {
-        document.body.innerHTML = ''
-        document.body.appendChild(element)
-      }
-
       const toDomNode = html => {
         const el = document.createElement('template')
         el.innerHTML = html
         return el.content.cloneNode(true)
       }
 
-      const createTextElement = text => toDomNode(`<h1>${text}</h1>`)
-      const createImageElement = src => toDomNode(`<img src="${src}"/>`)
+      const initContent = html => {
+        const mainContainer = document.querySelector('.main-container')
+        const newContent = toDomNode(`<div class="content">${html}</div>`)
+        const addNewContent = () => mainContainer.appendChild(newContent)
+        const replaceContent = previousContent => {
+          addNewContent()
+          previousContent.style.marginLeft = '-50%'
+          previousContent.addEventListener('transitionend', previousContent.remove)
+        }
+        Maybe.of(document.querySelector('.content')).fold(addNewContent, replaceContent)
+      }
+
+      const createTextTag = text => `<h1>${text}</h1>`
+      const createImageTag = src => `<img src="${src}"/>`
 
       const showImagesFromPage = gallery => pageNumber => () =>
         window.fetch(`https://api.imgur.com/3/gallery/r/${gallery}/time/${pageNumber}`, {
@@ -51,11 +78,11 @@
             const galleryPage = showImagesFromPage(gallery)
             if (images.length) doSlideShow(images, galleryPage(pageNumber + 1))
             else if (pageNumber !== 0) galleryPage(0)()
-            else initContent(createTextElement('Nothing to show :('))
+            else initContent(createTextTag('Nothing to show :('))
           })
           .catch(e => {
             console.log(e)
-            initContent(createTextElement('Error!'))
+            initContent(createTextTag('Error!'))
           })
 
       const doSlideShow = (images, nextPage) =>
@@ -73,7 +100,7 @@
           .then(response => response.blob())
           .then(window.URL.createObjectURL)
           .then(imageUrl =>
-            new Promise(resolve => resolve(createImageElement(imageUrl)))
+            new Promise(resolve => resolve(createImageTag(imageUrl)))
               .then(initContent)
               .then(cleanUpImage(imageUrl)))
           .then(pause)
@@ -84,7 +111,8 @@
 
       const pause = () => new Promise(resolve => setTimeout(resolve, 3000))
 
-      initContent(createTextElement('Loading...'))
+      initContent(createTextTag('Loading...'))
+
 
       showImagesFromPage(getParameter(location.search)('r')
         .fold(() => 'brokengifs',
