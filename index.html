@@ -35,6 +35,27 @@
         transition: margin-left 0.5s ease-out;
         width: 50%;
         height: 100%;
+        position: relative;
+      }
+
+      .progressbar {
+        animation-fill-mode: forwards;
+        animation-name: progress;
+        animation-timing-function: linear;
+        background-color: aquamarine;
+        height: 2px;
+        width: 100%;
+        position: absolute;
+        top: 0;
+      }
+
+      @keyframes progress {
+        from {
+          width: 0;
+        }
+        to {
+          width: 100%;
+        }
       }
 
     </style>
@@ -58,9 +79,14 @@
         return el.content.cloneNode(true)
       }
 
-      const initContent = html => {
+      const initContent = duration => html => {
         const mainContainer = document.querySelector('.main-container')
-        const newContent = toDomNode(`<div class="content">${html}</div>`)
+        const newContent = toDomNode(`
+          <div class="content">
+            <div class="progressbar" style="animation-duration: ${duration / 1000}s"></div>
+            ${html}
+          </div>
+        `)
         const addNewContent = () => mainContainer.appendChild(newContent)
         const replaceContent = previousContent => {
           addNewContent()
@@ -113,16 +139,18 @@
 
       const toDuration = ({animated, duration}) => animated ? duration : 5000
       const fetchBlob = url => window.fetch(url).then(response => response.blob())
+      const getDuration = objectUrl => fetchBlob(objectUrl).then(readInfo).then(toDuration)
+      const createObjectUrl = blob => new Promise(resolve => resolve(window.URL.createObjectURL(blob)))
 
       const toSlideShow = ({ slideDuration, chain }, imageUrl) => ({
-        slideDuration: () => fetchBlob(imageUrl).then(readInfo).then(toDuration),
+        slideDuration: () => getDuration(imageUrl),
         chain: chain
           .then(() => Promise.all([fetchBlob(imageUrl), slideDuration().then(pause)]))
-          .then(([blob]) => window.URL.createObjectURL(blob))
-          .then(imageUrl =>
-            new Promise(resolve => resolve(createImageTag(imageUrl)))
+          .then(([blob]) => createObjectUrl(blob)
+            .then(objectUrl => getDuration(objectUrl)
               .then(initContent)
-              .then(cleanUpImage(imageUrl)))
+              .then(contentWith => contentWith(createImageTag(objectUrl)))
+              .then(cleanUpImage(objectUrl))))
           .catch(e => {
             console.log(e)
             return Promise.resolve()
