@@ -137,7 +137,9 @@
         fileReader.readAsArrayBuffer(blob);
       })
 
-      const toDuration = ({animated, duration}) => animated ? duration : 5000
+      const stillImageDuration = 5000
+      const animationDuration = ({isBrowserDuration, durationChrome, duration}) => isBrowserDuration ? durationChrome : duration
+      const toDuration = imageInfo => imageInfo.animated ? animationDuration(imageInfo) : stillImageDuration
       const fetchBlob = url => window.fetch(url).then(response => response.blob())
       const getDuration = objectUrl => fetchBlob(objectUrl).then(readInfo).then(toDuration)
       const createObjectUrl = blob => Promise.resolve(window.URL.createObjectURL(blob))
