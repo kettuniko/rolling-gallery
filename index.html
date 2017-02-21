@@ -140,14 +140,14 @@
       const toDuration = ({animated, duration}) => animated ? duration : 5000
       const fetchBlob = url => window.fetch(url).then(response => response.blob())
       const getDuration = objectUrl => fetchBlob(objectUrl).then(readInfo).then(toDuration)
-      const createObjectUrl = blob => new Promise(resolve => resolve(window.URL.createObjectURL(blob)))
+      const createObjectUrl = blob => Promise.resolve(window.URL.createObjectURL(blob))
 
       const toSlideShow = (chain, imageUrl) =>
         chain
           .then(() => Promise.all([fetchBlob(imageUrl), chain.then(waitForPrevious => waitForPrevious())]))
           .then(([blob]) => createObjectUrl(blob)
             .then(objectUrl => getDuration(objectUrl)
-              .then(duration => new Promise(resolve => resolve(initContent(duration)))
+              .then(duration => Promise.resolve(initContent(duration))
                 .then(contentWith => contentWith(createImageTag(objectUrl)))
                 .then(cleanUpImage(objectUrl))
                 .then(() => pause(duration)))))
