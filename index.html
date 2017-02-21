@@ -119,17 +119,17 @@
 
       const isDisplayAble = ({link}) => link.includes('i.imgur.com')
 
+      const pause = duration => () => new Promise(resolve => setTimeout(resolve, duration))
       const doSlideShow = (images, nextPage) =>
         images
           .filter(isDisplayAble)
           .map(toImageUrl)
-          .reduce(toSlideShow, {slideDuration: () => Promise.resolve(0), chain: Promise.resolve()})
-          .chain
+          .reduce(toSlideShow, Promise.resolve(() => pause(0)))
+          .then(waitForLast => waitForLast())
           .then(nextPage)
 
       const toImageUrl = imageData => imageData.link.replace('http://', 'https://')
       const cleanUpImage = imageUrl => () => window.URL.revokeObjectURL(imageUrl)
-      const pause = duration => new Promise(resolve => setTimeout(resolve, duration))
 
       const readInfo = blob => new Promise((resolve) => {
         const fileReader = new FileReader()
@@ -142,20 +142,19 @@
       const getDuration = objectUrl => fetchBlob(objectUrl).then(readInfo).then(toDuration)
       const createObjectUrl = blob => new Promise(resolve => resolve(window.URL.createObjectURL(blob)))
 
-      const toSlideShow = ({ slideDuration, chain }, imageUrl) => ({
-        slideDuration: () => getDuration(imageUrl),
-        chain: chain
-          .then(() => Promise.all([fetchBlob(imageUrl), slideDuration().then(pause)]))
+      const toSlideShow = (chain, imageUrl) =>
+        chain
+          .then(() => Promise.all([fetchBlob(imageUrl), chain.then(waitForPrevious => waitForPrevious())]))
           .then(([blob]) => createObjectUrl(blob)
             .then(objectUrl => getDuration(objectUrl)
-              .then(initContent)
-              .then(contentWith => contentWith(createImageTag(objectUrl)))
-              .then(cleanUpImage(objectUrl))))
+              .then(duration => new Promise(resolve => resolve(initContent(duration)))
+                .then(contentWith => contentWith(createImageTag(objectUrl)))
+                .then(cleanUpImage(objectUrl))
+                .then(() => pause(duration)))))
           .catch(e => {
             console.log(e)
             return Promise.resolve()
           })
-      })
 
       showImagesFromPage(getParameter(location.search)('r')
         .fold(() => 'brokengifs',
