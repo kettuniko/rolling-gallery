@@ -98,6 +98,7 @@
 
       const createTextTag = text => `<h1>${text}</h1>`
       const createImageTag = src => `<img src="${src}"/>`
+      const showText = text => initContent(Infinity)(createTextTag(text))
 
       const showImagesFromPage = gallery => pageNumber => () =>
         window.fetch(`https://api.imgur.com/3/gallery/r/${gallery}/time/${pageNumber}`, {
@@ -110,11 +111,11 @@
             const galleryPage = showImagesFromPage(gallery)
             if (images.length) doSlideShow(images, galleryPage(pageNumber + 1))
             else if (pageNumber !== 0) galleryPage(0)()
-            else initContent(createTextTag('Nothing to show :('))
+            else showText('Nothing to show :(')
           })
           .catch(e => {
             console.log(e)
-            initContent(createTextTag('Error!'))
+            showText('Error!')
           })
 
       const isDisplayAble = ({link}) => link.includes('i.imgur.com')
