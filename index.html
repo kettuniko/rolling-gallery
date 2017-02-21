@@ -138,7 +138,7 @@
         fileReader.readAsArrayBuffer(blob);
       })
 
-      const stillImageDuration = 5000
+      const stillImageDuration = getParameter(location.search)('stillSeconds').fold(() => 5000, t => t * 1000)
       const animationDuration = ({isBrowserDuration, durationChrome, duration}) => isBrowserDuration ? durationChrome : duration
       const toDuration = imageInfo => imageInfo.animated ? animationDuration(imageInfo) : stillImageDuration
       const fetchBlob = url => window.fetch(url).then(response => response.blob())
