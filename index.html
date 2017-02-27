@@ -100,6 +100,8 @@
       const createImageTag = src => `<img src="${src}"/>`
       const showText = text => initContent(Infinity)(createTextTag(text))
 
+      const isDisplayAble = ({link}) => link.includes('i.imgur.com')
+
       const showImagesFromPage = gallery => pageNumber => () =>
         window.fetch(`https://api.imgur.com/3/gallery/r/${gallery}/time/${pageNumber}`, {
           headers: {
@@ -107,6 +109,7 @@
           }
         }).then(response => response.json())
           .then(responseBody => responseBody.data)
+          .then(images => images.filter(isDisplayAble))
           .then(images => {
             const galleryPage = showImagesFromPage(gallery)
             if (images.length) doSlideShow(images, galleryPage(pageNumber + 1))
@@ -118,12 +121,9 @@
             showText('Error!')
           })
 
-      const isDisplayAble = ({link}) => link.includes('i.imgur.com')
-
       const pause = duration => () => new Promise(resolve => setTimeout(resolve, duration))
       const doSlideShow = (images, nextPage) =>
         images
-          .filter(isDisplayAble)
           .map(toImageUrl)
           .reduce(toSlideShow, Promise.resolve(() => pause(0)))
           .then(waitForLast => waitForLast())
