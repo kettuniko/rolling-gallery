@@ -31,18 +31,19 @@
         width: 100%;
       }
 
-      .main-container {
-        overflow: hidden;
-        width: 200%;
-        height:100%;
-        display: flex;
+      .content {
+        height: 100%;
+        width: 100%;
       }
 
-      .content {
-        transition: margin-left 0.5s ease-out;
-        width: 50%;
-        height: 100%;
-        position: relative;
+      .content-animated {
+        animation-fill-mode: forwards;
+        animation-name: slide-into-view;
+        animation-timing-function: linear;
+        animation-duration: 0.8s;
+        position: absolute;
+        top: 0;
+        left: 100%;
       }
 
       .progressbar {
@@ -65,15 +66,23 @@
         }
       }
 
+      @keyframes slide-into-view {
+        from {
+          left: 100%;
+        }
+        to {
+          left: 0;
+        }
+      }
+
     </style>
   </head>
   <body>
-    <div class="main-container">
-      <div class="content">
-        <h1>Loading...</h1>
-        <footer class="footer">image copyrights: <a href="https://imgur.com/">imgur.com</a></footer>
-      </div>
+    <div class="content">
+      <h1>Loading...</h1>
+      <footer class="footer">image copyrights: <a href="https://imgur.com/">imgur.com</a></footer>
     </div>
+
     <script async src="analytics.js"></script>
     <script src="maybe.js"></script>
     <script src="get-parameter.js"></script>
@@ -87,21 +96,21 @@
         return el.content.cloneNode(true)
       }
 
+      const cleanUpContent = contentToSaveId => () =>
+        Array.from(document.querySelectorAll('.content'))
+          .filter(content => content.id !== contentToSaveId)
+          .forEach(content => content.remove())
+
       const initContent = duration => html => {
-        const mainContainer = document.querySelector('.main-container')
+        const id = `content-${new Date().getTime()}`
         const newContent = toDomNode(`
-          <div class="content">
+          <div class="content content-animated" id="${id}">
             <div class="progressbar" style="animation-duration: ${duration / 1000}s"></div>
             ${html}
           </div>
         `)
-        const addNewContent = () => mainContainer.appendChild(newContent)
-        const replaceContent = previousContent => {
-          addNewContent()
-          previousContent.style.marginLeft = '-50%'
-          previousContent.addEventListener('transitionend', previousContent.remove)
-        }
-        Maybe.of(document.querySelector('.content')).fold(addNewContent, replaceContent)
+        document.body.appendChild(newContent)
+        document.querySelector(`#${id}`).addEventListener('animationend', cleanUpContent(id))
       }
 
       const createTextTag = text => `<h1>${text}</h1>`
