@@ -91,6 +91,8 @@
     <script src="https://kettuniko.github.io/gify/gify.min.js"></script>
 
     <script type="text/javascript">
+      window.onerror = errorMsg => document.body.innerHTML = errorMsg
+
       const toDomNode = html => {
         const el = document.createElement('template')
         el.innerHTML = html
