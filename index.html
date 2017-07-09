@@ -94,6 +94,8 @@
     <script data-name="init" type="text/javascript">
       window.onerror = errorMsg => document.body.innerHTML = errorMsg
 
+      const isDisplayAble = ({link}) => link.includes('i.imgur.com')
+
       const fetchGallery = (gallery, pageNumber = 0) =>
         window.fetch(`https://api.imgur.com/3/gallery/r/${gallery}/time/${pageNumber}`, {
           headers: {
@@ -101,6 +103,7 @@
           }
         }).then(response => response.json())
           .then(responseBody => responseBody.data)
+          .then(images => images.filter(isDisplayAble))
     </script>
     <script data-name="roller" type="text/javascript">
       const toDomNode = html => {
@@ -130,11 +133,8 @@
       const createImageTag = src => `<img class="rolling-image" src="${src}"/>`
       const showText = text => initContent(Infinity)(createTextTag(text))
 
-      const isDisplayAble = ({link}) => link.includes('i.imgur.com')
-
       const showImagesFromPage = gallery => pageNumber => () =>
         fetchGallery(gallery, pageNumber)
-          .then(images => images.filter(isDisplayAble))
           .then(images => {
             const galleryPage = showImagesFromPage(gallery)
             if (images.length) doSlideShow(images, galleryPage(pageNumber + 1))
@@ -187,17 +187,20 @@
       const startRolling = gallery => showImagesFromPage(gallery)(0)()
     </script>
     <script data-name="landing" type="text/javascript">
-      const landingPage = () =>
-        fetchGallery('brokengifs')
-          .then(([{id, link, section}]) => ({
-            section,
-            link: link.replace(id, `${id}b`)
-          }))
-          .then(({section, link}) => toDomNode(`
-            <a href="?r=${section}">
-              <img src="${link}" />
-            </a>`))
-          .then(img => document.querySelector('.galleries').appendChild(img))
+      const galleries = ['brokengifs', 'wastedgifs']
+
+      const landingPage = () => Promise.all(galleries.map(fetchGallery))
+        .then(galleriesResults =>
+          galleriesResults
+            .map(([{ id, link, section }]) => ({
+              section,
+              link: link.replace(id, `${id}b`) // todo
+            }))
+            .map(({ section, link }) => toDomNode(`
+              <a href="?r=${section}">
+                <img src="${link}" />
+              </a>`))
+            .forEach(img => document.querySelector('.galleries').appendChild(img)))
     </script>
     <script data-name="main" type="text/javascript">
       getParameter(location.search)('r')
