@@ -94,7 +94,7 @@
     <script data-name="init" type="text/javascript">
       window.onerror = errorMsg => document.body.innerHTML = errorMsg
 
-      const fetchGallery = (gallery, pageNumber) =>
+      const fetchGallery = (gallery, pageNumber = 0) =>
         window.fetch(`https://api.imgur.com/3/gallery/r/${gallery}/time/${pageNumber}`, {
           headers: {
             'Authorization': 'Client-ID 1400c78269df7bc'
@@ -188,7 +188,7 @@
     </script>
     <script data-name="landing" type="text/javascript">
       const landingPage = () =>
-        fetchGallery('brokengifs', 0)
+        fetchGallery('brokengifs')
           .then(([{id, link, section}]) => ({
             section,
             link: link.replace(id, `${id}b`)
