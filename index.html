@@ -18,7 +18,7 @@
         margin: 0;
       }
 
-      img {
+      .rolling-image {
         object-fit: cover;
         height: 100%;
         width: 100%;
@@ -80,7 +80,7 @@
   </head>
   <body>
     <div class="content">
-      <h1>Loading...</h1>
+      <div class="galleries"></div>
       <footer class="footer">image copyrights: <a href="https://imgur.com/">imgur.com</a></footer>
     </div>
 
@@ -93,6 +93,14 @@
 
     <script data-name="init" type="text/javascript">
       window.onerror = errorMsg => document.body.innerHTML = errorMsg
+
+      const fetchGallery = (gallery, pageNumber) =>
+        window.fetch(`https://api.imgur.com/3/gallery/r/${gallery}/time/${pageNumber}`, {
+          headers: {
+            'Authorization': 'Client-ID 1400c78269df7bc'
+          }
+        }).then(response => response.json())
+          .then(responseBody => responseBody.data)
     </script>
     <script data-name="roller" type="text/javascript">
       const toDomNode = html => {
@@ -119,18 +127,13 @@
       }
 
       const createTextTag = text => `<h1>${text}</h1>`
-      const createImageTag = src => `<img src="${src}"/>`
+      const createImageTag = src => `<img class="rolling-image" src="${src}"/>`
       const showText = text => initContent(Infinity)(createTextTag(text))
 
       const isDisplayAble = ({link}) => link.includes('i.imgur.com')
 
       const showImagesFromPage = gallery => pageNumber => () =>
-        window.fetch(`https://api.imgur.com/3/gallery/r/${gallery}/time/${pageNumber}`, {
-          headers: {
-            'Authorization': 'Client-ID 1400c78269df7bc'
-          }
-        }).then(response => response.json())
-          .then(responseBody => responseBody.data)
+        fetchGallery(gallery, pageNumber)
           .then(images => images.filter(isDisplayAble))
           .then(images => {
             const galleryPage = showImagesFromPage(gallery)
@@ -184,7 +187,17 @@
       const startRolling = gallery => showImagesFromPage(gallery)(0)()
     </script>
     <script data-name="landing" type="text/javascript">
-      const landingPage = () => console.log('landing todo')
+      const landingPage = () =>
+        fetchGallery('brokengifs', 0)
+          .then(([{id, link, section}]) => ({
+            section,
+            link: link.replace(id, `${id}b`)
+          }))
+          .then(({section, link}) => toDomNode(`
+            <a href="?r=${section}">
+              <img src="${link}" />
+            </a>`))
+          .then(img => document.querySelector('.galleries').appendChild(img))
     </script>
     <script data-name="main" type="text/javascript">
       getParameter(location.search)('r')
