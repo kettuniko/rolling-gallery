@@ -180,8 +180,8 @@
             return Promise.resolve()
           })
 
-      const landingPage = () => console.log('landing todo')
       const startRolling = gallery => showImagesFromPage(gallery)(0)()
+      const landingPage = () => console.log('landing todo')
 
       getParameter(location.search)('r')
         .fold(landingPage, startRolling)
