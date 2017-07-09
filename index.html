@@ -180,9 +180,12 @@
             return Promise.resolve()
           })
 
-      showImagesFromPage(getParameter(location.search)('r')
-        .fold(() => 'brokengifs',
-              gallery => gallery))(0)()
+      const landingPage = () => console.log('landing todo')
+      const startRolling = gallery => showImagesFromPage(gallery)(0)()
+
+      getParameter(location.search)('r')
+        .fold(landingPage, startRolling)
+
     </script>
   </body>
 </html>
