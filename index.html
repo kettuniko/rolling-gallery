@@ -91,9 +91,10 @@
     <script src="https://kettuniko.github.io/gify/gify.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fetch/2.0.3/fetch.min.js"></script>
 
-    <script type="text/javascript">
+    <script data-name="init" type="text/javascript">
       window.onerror = errorMsg => document.body.innerHTML = errorMsg
-
+    </script>
+    <script data-name="roller" type="text/javascript">
       const toDomNode = html => {
         const el = document.createElement('template')
         el.innerHTML = html
@@ -181,11 +182,13 @@
           })
 
       const startRolling = gallery => showImagesFromPage(gallery)(0)()
+    </script>
+    <script data-name="landing" type="text/javascript">
       const landingPage = () => console.log('landing todo')
-
+    </script>
+    <script data-name="main" type="text/javascript">
       getParameter(location.search)('r')
         .fold(landingPage, startRolling)
-
     </script>
   </body>
 </html>
