@@ -24,6 +24,35 @@
         width: 100%;
       }
 
+      .galleries {
+        display: flex;
+      }
+      
+      .gallery-head {
+        display: block;
+        overflow: hidden;
+        text-decoration: none;
+        position: relative;
+      }
+
+      .gallery-head img {
+        transition: all .2s;
+      }
+
+      .gallery-head:hover img {
+        transform: scale(1.2);
+      }
+
+      .gallery-head__name {
+        bottom: 10px;
+        color: white;
+        left: 0;
+        position: absolute;
+        right: 0;
+        text-align: center;
+        text-shadow: 1px 1px 1px #585858;
+      }
+
       footer {
         bottom: 20px;
         position: absolute;
@@ -189,16 +218,17 @@
     <script data-name="landing" type="text/javascript">
       const galleries = ['brokengifs', 'wastedgifs']
 
-      const landingPage = () => Promise.all(galleries.map(fetchGallery))
+      const landingPage = () => Promise.all(galleries.map(g => fetchGallery(g)))
         .then(galleriesResults =>
           galleriesResults
             .map(([{ id, link, section }]) => ({
               section,
-              link: link.replace(id, `${id}b`) // todo
+              link: `https://i.imgur.com/${id}b.jpg`
             }))
             .map(({ section, link }) => toDomNode(`
-              <a href="?r=${section}">
+              <a class="gallery-head" href="?r=${section}">
                 <img src="${link}" />
+                <span class="gallery-head__name">${section}</span>
               </a>`))
             .forEach(img => document.querySelector('.galleries').appendChild(img)))
     </script>
