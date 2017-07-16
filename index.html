@@ -110,6 +110,7 @@
   <body>
     <div class="content">
       <div class="galleries"></div>
+      <h1 class="loading">Loading...</h1>
       <footer class="footer">image copyrights: <a href="https://imgur.com/">imgur.com</a></footer>
     </div>
 
@@ -216,21 +217,21 @@
       const startRolling = gallery => showImagesFromPage(gallery)(0)()
     </script>
     <script data-name="landing" type="text/javascript">
-      const galleries = ['brokengifs', 'wastedgifs']
+      const galleries = ['brokengifs', 'wastedgifs', 'earthporn', 'reactiongifs', 'gifs', 'wallpapers', 'woahdude', 'perfecttiming', 'foodporn', 'unexpected']
 
-      const landingPage = () => Promise.all(galleries.map(g => fetchGallery(g)))
-        .then(galleriesResults =>
-          galleriesResults
-            .map(([{ id, link, section }]) => ({
-              section,
-              link: `https://i.imgur.com/${id}b.jpg`
-            }))
-            .map(({ section, link }) => toDomNode(`
+      const landingPage = () => galleries
+        .map((g) => fetchGallery(g))
+        .reduce((sequence, current) => sequence
+          .then(() => current
+            .then(([{ id, link, section }]) => toDomNode(`
               <a class="gallery-head" href="?r=${section}">
-                <img src="${link}" />
+                <img src="${`https://i.imgur.com/${id}b.jpg`}" />
                 <span class="gallery-head__name">${section}</span>
               </a>`))
-            .forEach(img => document.querySelector('.galleries').appendChild(img)))
+            .then(img => document.querySelector('.galleries').appendChild(img))), Promise.resolve())
+            .then(() => {
+              document.querySelector('.loading').remove()
+            })
     </script>
     <script data-name="main" type="text/javascript">
       getParameter(location.search)('r')
