@@ -227,7 +227,7 @@
         .map((g) => fetchGallery(g))
         .reduce((sequence, current) => sequence
           .then(() => current
-            .then(([{ id, link, section }]) => toDomNode(`
+            .then(([{ id, section }]) => toDomNode(`
               <a class="gallery-head" href="?r=${section}">
                 <img src="${`https://i.imgur.com/${id}b.jpg`}" />
                 <span class="gallery-head__name">${section}</span>
