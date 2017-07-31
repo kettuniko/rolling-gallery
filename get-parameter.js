@@ -1,4 +1,6 @@
-const getParameter = queryString => name =>
+import Maybe from './maybe'
+
+export default queryString => name =>
   Maybe.of(queryString)
     .map(params => params.split(`${name}=`))
     .map(([_, rest]) => rest)

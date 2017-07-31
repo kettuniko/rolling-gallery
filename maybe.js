@@ -1,4 +1,4 @@
-class Maybe {
+export default class Maybe {
   constructor(x) {
     this.__value = x
   }
