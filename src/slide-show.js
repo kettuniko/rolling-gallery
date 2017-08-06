@@ -1,3 +1,5 @@
+import { parse } from 'query-string'
+import { compose, multiply, propOr } from 'ramda'
 import getInfo from 'gif-info'
 import fetchGallery from './fetch-gallery'
 import toDomNode from './to-dom-node'
@@ -53,10 +55,10 @@ const readInfo = blob => new Promise((resolve) => {
   fileReader.readAsArrayBuffer(blob);
 })
 
-// const stillImageDuration = getParameter(location.search)('stillSeconds').fold(() => 5000, t => t * 1000)
-const stillImageDuration = 1000 //TODO
+const toMilliseconds = multiply(1000)
+const stillImageDuration = compose(toMilliseconds, propOr(5, 'stillSeconds'), parse)
 const animationDuration = ({ isBrowserDuration, durationChrome, duration }) => isBrowserDuration ? durationChrome : duration
-const toDuration = imageInfo => imageInfo.animated ? animationDuration(imageInfo) : stillImageDuration
+const toDuration = imageInfo => imageInfo.animated ? animationDuration(imageInfo) : stillImageDuration(window.location.search)
 const fetchBlob = url => window.fetch(url).then(response => response.blob())
 const getDuration = objectUrl => fetchBlob(objectUrl).then(readInfo).then(toDuration)
 const createObjectUrl = blob => Promise.resolve(window.URL.createObjectURL(blob))
