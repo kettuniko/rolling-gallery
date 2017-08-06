@@ -1,3 +1,11 @@
+'use strict'
+const webpack = require('webpack')
+
+const useOptimizedBuild = process.argv.includes('-p')
+const plugins = useOptimizedBuild
+  ? [new webpack.optimize.ModuleConcatenationPlugin()]
+  : []
+
 module.exports = {
   entry: './src/main.js',
   output: {
@@ -12,5 +20,6 @@ module.exports = {
         exclude: /node_modules/
       }
     ]
-  }
+  },
+  plugins
 }
