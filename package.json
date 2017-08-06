@@ -15,7 +15,9 @@
     "webpack": "^3.3.0"
   },
   "dependencies": {
-    "gif-info": "^1.0.1"
+    "gif-info": "^1.0.1",
+    "query-string": "^5.0.0",
+    "ramda": "^0.24.1"
   },
   "scripts": {
     "start": "yarn && webpack --watch",
