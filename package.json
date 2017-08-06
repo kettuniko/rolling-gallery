@@ -20,7 +20,7 @@
     "ramda": "^0.24.1"
   },
   "scripts": {
-    "start": "yarn && webpack --watch",
-    "build": "yarn && webpack -p"
+    "build": "yarn && webpack -p",
+    "start": "yarn && webpack --watch"
   }
 }
