@@ -14,6 +14,4 @@ export default () => galleries
             <span class="gallery-head__name">${section}</span>
           </a>`))
       .then(img => document.querySelector('.galleries').appendChild(img))), Promise.resolve())
-  .then(() => {
-    document.querySelector('.loading').remove()
-  })
+  .then(() => document.querySelector('.loading').remove())
