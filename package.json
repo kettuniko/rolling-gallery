@@ -15,6 +15,7 @@
     "webpack": "^3.4.1"
   },
   "dependencies": {
+    "axios": "^0.16.2",
     "gif-info": "^1.0.1",
     "query-string": "^5.0.0",
     "ramda": "^0.24.1"

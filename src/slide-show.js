@@ -1,5 +1,6 @@
+import { get } from 'axios'
 import { parse } from 'query-string'
-import { compose, multiply, propOr } from 'ramda'
+import { compose, multiply, prop, propOr } from 'ramda'
 import getInfo from 'gif-info'
 import fetchGallery from './fetch-gallery'
 import toDomNode from './to-dom-node'
@@ -49,18 +50,13 @@ const doSlideShow = (images, nextPage) =>
 const toImageUrl = imageData => imageData.link.replace('http://', 'https://')
 const cleanUpImage = imageUrl => () => window.URL.revokeObjectURL(imageUrl)
 
-const readInfo = blob => new Promise((resolve) => {
-  const fileReader = new FileReader()
-  fileReader.onload = () => resolve(getInfo(fileReader.result))
-  fileReader.readAsArrayBuffer(blob);
-})
-
 const toMilliseconds = multiply(1000)
 const stillImageDuration = compose(toMilliseconds, propOr(5, 'stillSeconds'), parse)
 const animationDuration = ({ isBrowserDuration, durationChrome, duration }) => isBrowserDuration ? durationChrome : duration
 const toDuration = imageInfo => imageInfo.animated ? animationDuration(imageInfo) : stillImageDuration(window.location.search)
-const fetchBlob = url => window.fetch(url).then(response => response.blob())
-const getDuration = objectUrl => fetchBlob(objectUrl).then(readInfo).then(toDuration)
+const fetchBlob = url => get(url, { responseType: 'blob' }).then(prop('data'))
+const fetchArrayBuffer = url => get(url, { responseType: 'arraybuffer' }).then(prop('data'))
+const getDuration = objectUrl => fetchArrayBuffer(objectUrl).then(getInfo).then(toDuration)
 const createObjectUrl = blob => Promise.resolve(window.URL.createObjectURL(blob))
 
 const toSlideShow = (chain, imageUrl) =>
