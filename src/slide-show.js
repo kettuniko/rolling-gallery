@@ -73,4 +73,14 @@ const toSlideShow = (chain, imageUrl) =>
       return Promise.resolve()
     })
 
-export default gallery => showImagesFromPage(gallery)(0)()
+export default gallery => {
+  const frontPage = toDomNode(`
+    <div class="content">
+      <h1 class="loading">Loading...</h1>
+      <footer class="footer">image copyrights: <a href="https://imgur.com/">imgur.com</a></footer>
+    </div>
+  `)
+  document.querySelector('.root').appendChild(frontPage)
+
+  showImagesFromPage(gallery)(0)()
+}

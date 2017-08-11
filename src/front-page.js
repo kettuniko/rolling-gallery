@@ -25,8 +25,17 @@ const renderSequentially = (sequence, current) => sequence
         </a>`))
     .then(img => document.querySelector('.galleries').appendChild(img)))
 
-export default () => pipe(
-  map(fetchGallery),
-  reduce(renderSequentially, Promise.resolve())
-)(galleries)
-  .then(() => document.querySelector('.loading').remove())
+export default () => {
+  const frontPage = toDomNode(`
+    <div class="galleries"></div>
+    <h1 class="loading">Loading...</h1>
+    <footer class="footer">image copyrights: <a href="https://imgur.com/">imgur.com</a></footer>
+  `)
+  document.querySelector('.root').appendChild(frontPage)
+
+  return pipe(
+    map(fetchGallery),
+    reduce(renderSequentially, Promise.resolve())
+  )(galleries)
+    .then(() => document.querySelector('.loading').remove());
+}
