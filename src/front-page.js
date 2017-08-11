@@ -2,7 +2,18 @@ import { map, pipe, reduce } from 'ramda'
 import fetchGallery from './fetch-gallery'
 import toDomNode from './to-dom-node'
 
-const galleries = ['brokengifs', 'wastedgifs', 'earthporn', 'reactiongifs', 'gifs', 'wallpapers', 'woahdude', 'perfecttiming', 'foodporn', 'unexpected']
+const galleries = [
+  'brokengifs',
+  'wastedgifs',
+  'earthporn',
+  'reactiongifs',
+  'gifs',
+  'wallpapers',
+  'woahdude',
+  'perfecttiming',
+  'foodporn',
+  'unexpected'
+]
 
 const renderSequentially = (sequence, current) => sequence
   .then(() => current
