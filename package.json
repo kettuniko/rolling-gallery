@@ -12,13 +12,16 @@
     "babel-preset-es2015": "^6.24.1",
     "babel-preset-es2016": "^6.24.1",
     "babel-preset-es2017": "^6.24.1",
+    "babel-preset-react": "^6.24.1",
     "webpack": "^3.4.1"
   },
   "dependencies": {
     "axios": "^0.16.2",
     "gif-info": "^1.0.1",
     "query-string": "^5.0.0",
-    "ramda": "^0.24.1"
+    "ramda": "^0.24.1",
+    "react": "^15.6.1",
+    "react-dom": "^15.6.1"
   },
   "scripts": {
     "build": "yarn && webpack -p",
