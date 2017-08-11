@@ -1,4 +1,4 @@
-import { compose, map, reduce } from 'ramda'
+import { map, pipe, reduce } from 'ramda'
 import fetchGallery from './fetch-gallery'
 import toDomNode from './to-dom-node'
 
@@ -14,8 +14,8 @@ const renderSequentially = (sequence, current) => sequence
         </a>`))
     .then(img => document.querySelector('.galleries').appendChild(img)))
 
-export default () => compose(
-  completed => completed.then(() => document.querySelector('.loading').remove()),
-  reduce(renderSequentially, Promise.resolve()),
-  map(fetchGallery))
-(galleries)
+export default () => pipe(
+  map(fetchGallery),
+  reduce(renderSequentially, Promise.resolve())
+)(galleries)
+  .then(() => document.querySelector('.loading').remove())
