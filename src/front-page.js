@@ -38,7 +38,7 @@ export default class FrontPage extends Component {
         .then(head)
         .then(pick(['id', 'section']))
         .then(gallery =>
-          this.setState({ galleries: append(gallery, this.state.galleries) })
+          this.setState(prevState => ({ galleries: append(gallery, prevState.galleries) }))
         ))
 
     galleries
