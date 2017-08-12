@@ -1,14 +1,19 @@
-import { parse } from 'query-string'
-import { compose, ifElse, isNil, prop } from 'ramda'
-import frontPage from './front-page'
-import slideShow from './slide-show'
+import { parse as parseQueryString } from 'query-string'
+import { compose, flip, ifElse, isNil, prop } from 'ramda'
+import React from 'react'
+import ReactDOM from 'react-dom'
+import FrontPage from './front-page'
+import SlideShow from './slide-show'
 
 window.onerror = errorMsg => document.body.innerHTML = errorMsg
 
+const render = flip(ReactDOM.render)
+
 const init = compose(
-  ifElse(isNil, frontPage, slideShow),
+  render(document.querySelector('.root')),
+  ifElse(isNil, () => <FrontPage/>, gallery => <SlideShow gallery={gallery}/>),
   prop('r'),
-  parse
+  parseQueryString
 )
 
 init(window.location.search)

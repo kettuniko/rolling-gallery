@@ -1,6 +1,7 @@
 import { get } from 'axios'
 import { parse } from 'query-string'
 import { compose, multiply, prop, propOr } from 'ramda'
+import React, { Component } from 'react'
 import getInfo from 'gif-info'
 import fetchGallery from './fetch-gallery'
 import toDomNode from './to-dom-node'
@@ -73,14 +74,25 @@ const toSlideShow = (chain, imageUrl) =>
       return Promise.resolve()
     })
 
-export default gallery => {
-  const frontPage = toDomNode(`
-    <div class="content">
-      <h1 class="loading">Loading...</h1>
-      <footer class="footer">image copyrights: <a href="https://imgur.com/">imgur.com</a></footer>
-    </div>
-  `)
-  document.querySelector('.root').appendChild(frontPage)
+export default class SlideShow extends Component {
+  constructor(props) {
+    super(props)
 
-  showImagesFromPage(gallery)(0)()
+    this.state = {
+      duration: null,
+      imageUrl: null
+    }
+  }
+
+  componentDidMount() {
+    showImagesFromPage(this.props.gallery)(0)()
+  }
+
+  render() {
+    return (
+      <div className="content">
+        <h1 className="loading">Loading...</h1>
+      </div>
+    )
+  }
 }

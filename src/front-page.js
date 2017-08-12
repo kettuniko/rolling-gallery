@@ -1,6 +1,5 @@
 import { append, head, map, pick } from 'ramda'
 import React, { Component } from 'react'
-import ReactDOM from 'react-dom'
 import fetchGallery from './fetch-gallery'
 
 const galleries = [
@@ -23,7 +22,7 @@ const Gallery = ({ id, section }) =>
     <span className="gallery-head__name">{section}</span>
   </a>
 
-class FrontPage extends Component {
+export default class FrontPage extends Component {
   constructor(props) {
     super(props)
 
@@ -60,6 +59,3 @@ class FrontPage extends Component {
     )
   }
 }
-
-export default () => ReactDOM.render(<FrontPage/>, document.querySelector('.root'))
-
