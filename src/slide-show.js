@@ -88,6 +88,7 @@ export default class SlideShow extends Component {
     showImagesFromPage(this.props.gallery)(0)()
   }
 
+  // TODO react rewrite wip
   render() {
     return (
       <div className="content">
