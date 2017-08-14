@@ -1,4 +1,4 @@
-import { append, head, map, pick } from 'ramda'
+import { append, compose, head, map, objOf, pick, prop, reduce } from 'ramda'
 import React, { Component } from 'react'
 import fetchGallery from './fetch-gallery'
 
@@ -22,12 +22,17 @@ const Gallery = ({ id, section }) =>
     <span className="gallery-head__name">{section}</span>
   </a>
 
-const renderSequentially = onResolve => (sequence, current) =>
-  sequence
-    .then(() => current
-      .then(head)
-      .then(pick(['id', 'section']))
-      .then(onResolve))
+const createAppender = gallery => compose(
+  objOf('galleries'),
+  append(gallery),
+  prop('galleries')
+)
+
+const fetchAsGallery = gallery =>
+  fetchGallery(gallery)
+    .then(head)
+    .then(pick(['id', 'section']))
+    .then(createAppender)
 
 export default class FrontPage extends Component {
   constructor(props) {
@@ -40,12 +45,18 @@ export default class FrontPage extends Component {
   }
 
   componentDidMount() {
-    galleries
-      .map(g => fetchGallery(g))
-      .reduce(renderSequentially(gallery =>
-          this.setState(({ galleries }) => ({ galleries: append(gallery, galleries) }))
-        ),
-        Promise.resolve())
+    const renderSequentially = (sequence, current) =>
+      sequence
+        .then(() => current
+          .then(appendToGalleries =>
+            this.setState(appendToGalleries)))
+
+    const renderGalleries = compose(
+      reduce(renderSequentially, Promise.resolve()),
+      map(fetchAsGallery)
+    )
+
+    renderGalleries(galleries)
       .then(() => this.setState({ fetching: false }))
   }
 
