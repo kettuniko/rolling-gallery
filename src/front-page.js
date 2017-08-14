@@ -22,6 +22,13 @@ const Gallery = ({ id, section }) =>
     <span className="gallery-head__name">{section}</span>
   </a>
 
+const renderSequentially = onResolve => (sequence, current) =>
+  sequence
+    .then(() => current
+      .then(head)
+      .then(pick(['id', 'section']))
+      .then(onResolve))
+
 export default class FrontPage extends Component {
   constructor(props) {
     super(props)
@@ -33,17 +40,12 @@ export default class FrontPage extends Component {
   }
 
   componentDidMount() {
-    const renderSequentially = (sequence, current) => sequence
-      .then(() => current
-        .then(head)
-        .then(pick(['id', 'section']))
-        .then(gallery =>
-          this.setState(prevState => ({ galleries: append(gallery, prevState.galleries) }))
-        ))
-
     galleries
       .map(g => fetchGallery(g))
-      .reduce(renderSequentially, Promise.resolve())
+      .reduce(renderSequentially(gallery =>
+          this.setState(({ galleries }) => ({ galleries: append(gallery, galleries) }))
+        ),
+        Promise.resolve())
       .then(() => this.setState({ fetching: false }))
   }
 
