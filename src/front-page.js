@@ -1,4 +1,4 @@
-import { append, compose, head, map, objOf, pick, prop, reduce } from 'ramda'
+import { append, compose, composeP, head, lensProp, map, over, pick, reduce } from 'ramda'
 import React, { Component } from 'react'
 import fetchGallery from './fetch-gallery'
 
@@ -22,17 +22,17 @@ const Gallery = ({ id, section }) =>
     <span className="gallery-head__name">{section}</span>
   </a>
 
-const createAppender = gallery => compose(
-  objOf('galleries'),
-  append(gallery),
-  prop('galleries')
+const appendToGalleriesF = gallery => over(
+  lensProp('galleries'),
+  append(gallery)
 )
 
-const fetchAsGallery = gallery =>
-  fetchGallery(gallery)
-    .then(head)
-    .then(pick(['id', 'section']))
-    .then(createAppender)
+const fetchAsGallery = composeP(
+  appendToGalleriesF,
+  pick(['id', 'section']),
+  head,
+  fetchGallery
+)
 
 export default class FrontPage extends Component {
   constructor(props) {
