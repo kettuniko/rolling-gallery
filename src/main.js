@@ -3,7 +3,7 @@ import { compose, flip, ifElse, isNil, prop } from 'ramda'
 import React from 'react'
 import ReactDOM from 'react-dom'
 import FrontPage from './front-page/FrontPage.jsx'
-import SlideShow from './slide-show'
+import SlideShow from './slide-show/SlideShow.jsx'
 
 window.onerror = errorMsg => document.body.innerHTML = errorMsg
 

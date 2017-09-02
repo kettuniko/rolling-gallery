@@ -1,10 +1,13 @@
+import './SlideShow.css'
+
 import { get } from 'axios'
 import { parse } from 'query-string'
 import { compose, multiply, prop, propOr } from 'ramda'
 import React, { Component } from 'react'
 import getInfo from 'gif-info'
-import fetchGallery from './fetch-gallery'
-import toDomNode from './to-dom-node'
+import fetchGallery from '../fetch-gallery'
+import toDomNode from '../to-dom-node'
+import Spinner from '../spinner/Spinner.jsx'
 
 const cleanUpContent = contentToSaveId => () =>
   Array.from(document.querySelectorAll('.content'))
@@ -92,7 +95,7 @@ export default class SlideShow extends Component {
   render() {
     return (
       <div className="content">
-        <h1 className="loading">Loading...</h1>
+        <div className='slide-show-spinner'><Spinner/></div>
       </div>
     )
   }

@@ -1,0 +1,66 @@
+body {
+  margin: 0;
+  overflow: hidden;
+}
+
+.rolling-image {
+  object-fit: cover;
+  height: 100%;
+  width: 100%;
+}
+
+.content {
+  height: 100%;
+  width: 100%;
+}
+
+.content-animated {
+  animation-fill-mode: forwards;
+  animation-name: slide-into-view;
+  animation-timing-function: linear;
+  animation-duration: 0.8s;
+  position: absolute;
+  top: 0;
+  left: 100%;
+  border-left: 10px solid black;
+}
+
+.progressbar {
+  animation-fill-mode: forwards;
+  animation-name: progress;
+  animation-timing-function: linear;
+  background-color: aquamarine;
+  height: 2px;
+  width: 100%;
+  position: absolute;
+  top: 0;
+}
+
+.slide-show-spinner {
+  margin-top: 50px;
+  display: flex;
+  justify-content: center;
+}
+
+.slide-show-spinner .spinner {
+  height: 90px;
+  width: 90px;
+}
+
+@keyframes progress {
+  from {
+    width: 0;
+  }
+  to {
+    width: 100%;
+  }
+}
+
+@keyframes slide-into-view {
+  from {
+    left: 100%;
+  }
+  to {
+    left: -10px;
+  }
+}
