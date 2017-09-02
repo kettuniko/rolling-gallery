@@ -42,6 +42,19 @@ body {
   font-size: 32px;
 }
 
+.gallery-head-spinner {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  min-height: 350px;
+  width: 20%;
+}
+
+.gallery-head-spinner .spinner {
+  height: 90px;
+  width: 90px;
+}
+
 footer {
   margin: 20px 0;
   text-align: center;

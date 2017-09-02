@@ -2,6 +2,7 @@ import './FrontPage.css'
 import { append, compose, composeP, head, lensProp, map, over, pick, reduce } from 'ramda'
 import React, { Component } from 'react'
 import fetchGallery from '../fetch-gallery'
+import Spinner from '../spinner/Spinner.jsx'
 
 const galleries = [
   'brokengifs',
@@ -66,8 +67,8 @@ export default class FrontPage extends Component {
       <div className='front-page'>
         <div className="galleries">
           {map(({ id, section }) => <Gallery id={id} section={section} key={id}/>, this.state.galleries)}
+          {this.state.fetching && <div className='gallery-head-spinner'><Spinner/></div>}
         </div>
-        {this.state.fetching && <h1 className="loading">Loading...</h1>}
         <footer className="footer">image copyrights: <a href="https://imgur.com/">imgur.com</a></footer>
       </div>
     )
