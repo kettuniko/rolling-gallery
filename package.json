@@ -9,14 +9,12 @@
   "devDependencies": {
     "babel-core": "^6.26.0",
     "babel-loader": "^7.1.2",
-    "babel-preset-es2015": "^6.24.1",
-    "babel-preset-es2016": "^6.24.1",
-    "babel-preset-es2017": "^6.24.1",
     "babel-preset-react": "^6.24.1",
     "webpack": "^3.5.5"
   },
   "dependencies": {
     "axios": "^0.16.2",
+    "babel-preset-env": "^1.6.0",
     "css-loader": "^0.28.7",
     "gif-info": "^1.0.1",
     "query-string": "^5.0.0",
