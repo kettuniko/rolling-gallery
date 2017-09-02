@@ -1,0 +1,17 @@
+.progressbar {
+  animation-fill-mode: forwards;
+  animation-name: progress;
+  animation-timing-function: linear;
+  background-color: aquamarine;
+  height: 2px;
+  width: 100%;
+}
+
+@keyframes progress {
+  from {
+    width: 0;
+  }
+  to {
+    width: 100%;
+  }
+}
