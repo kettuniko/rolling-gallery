@@ -1,3 +1,4 @@
+import './FrontPage.css'
 import { append, compose, composeP, head, lensProp, map, over, pick, reduce } from 'ramda'
 import React, { Component } from 'react'
 import fetchGallery from '../fetch-gallery'
@@ -62,7 +63,7 @@ export default class FrontPage extends Component {
 
   render() {
     return (
-      <div>
+      <div className='front-page'>
         <div className="galleries">
           {map(({ id, section }) => <Gallery id={id} section={section} key={id}/>, this.state.galleries)}
         </div>
