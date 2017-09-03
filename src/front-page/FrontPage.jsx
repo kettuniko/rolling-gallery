@@ -33,7 +33,7 @@ const fetchAsGallery = composeP(
   appendToGalleriesF,
   pick(['id', 'section']),
   head,
-  fetchGallery
+  fetchGallery(0)
 )
 
 export default class FrontPage extends Component {

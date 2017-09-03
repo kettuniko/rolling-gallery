@@ -1,16 +1,16 @@
 import './SlideShow.css'
 
-import { compose, path } from 'ramda'
+import { compose, head, map, path, prop, replace } from 'ramda'
 import React, { Component } from 'react'
 import { fetchBlob } from '../fetch'
+import fetchGallery from '../fetch-gallery'
 import getDuration from '../get-duration'
 import Progressbar from '../progressbar/Progressbar.jsx'
 import Spinner from '../spinner/Spinner.jsx'
 
 const { createObjectURL, revokeObjectURL } = window.URL
 const revokeOnLoad = compose(revokeObjectURL, path(['target', 'src']))
-
-const pause = duration => new Promise(resolve => setTimeout(resolve, duration))
+const toImageUrl = compose(replace('http://', 'https://'), prop('link'))
 
 export default class SlideShow extends Component {
   constructor(props) {
@@ -24,14 +24,19 @@ export default class SlideShow extends Component {
   }
 
   componentDidMount() {
-    fetchBlob('https://i.imgur.com/lRzZzxB.gif')
+    fetchGallery(0, this.props.gallery)
+      .then(map(toImageUrl))
+      .then(head)
+      .then(fetchBlob)
       .then(createObjectURL)
       .then(objectUrl =>
         getDuration(objectUrl)
-          .then(duration => {
-            this.setState({ imageUrl: objectUrl, fetching: false, duration })
-            return pause(duration)
-          }))
+          .then(duration =>
+            this.setState({
+              duration,
+              imageUrl: objectUrl,
+              fetching: false
+            })))
   }
 
   render() {
