@@ -1,22 +1,11 @@
 import './SlideShow.css'
 
-import { get as axiosGet } from 'axios'
-import getInfo from 'gif-info'
-import { compose, composeP, curry, flip, multiply, path, prop, propOr } from 'ramda'
-import { parse } from 'query-string'
+import { compose, path } from 'ramda'
 import React, { Component } from 'react'
+import { fetchBlob } from '../fetch'
+import getDuration from '../get-duration'
 import Progressbar from '../progressbar/Progressbar.jsx'
 import Spinner from '../spinner/Spinner.jsx'
-
-const get = curry(composeP(prop('data'), flip(axiosGet)))
-const fetchBlob = get({ responseType: 'blob' })
-const fetchArrayBuffer = get({ responseType: 'arraybuffer' })
-
-const toMilliseconds = multiply(1000)
-const stillImageDuration = compose(toMilliseconds, propOr(5, 'stillSeconds'), parse)
-const animationDuration = ({ isBrowserDuration, durationChrome, duration }) => isBrowserDuration ? durationChrome : duration
-const toDuration = imageInfo => imageInfo.animated ? animationDuration(imageInfo) : stillImageDuration(window.location.search)
-const getDuration = composeP(toDuration, getInfo, fetchArrayBuffer)
 
 const { createObjectURL, revokeObjectURL } = window.URL
 const revokeOnLoad = compose(revokeObjectURL, path(['target', 'src']))
