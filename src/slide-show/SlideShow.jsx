@@ -57,7 +57,6 @@ const showImagesFromGalleryPage = curry((gallery, handlers, pageNumber) =>
       handlers.onMessage('Terrible error!')
     }))
 
-
 export default class SlideShow extends Component {
   constructor(props) {
     super(props)
