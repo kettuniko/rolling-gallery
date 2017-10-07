@@ -43,8 +43,8 @@ export default class SlideShow extends Component {
     return (
       <div className='slide-show'>
         {this.state.duration && <Progressbar key={this.state.imageUrl} duration={this.state.duration}/>}
-        {this.state.imageUrl && <img className='slide-show--image' onLoad={revokeOnLoad} src={this.state.imageUrl}/>}
-        {this.state.fetching && <div className='slide-show--spinner'><Spinner/></div>}
+        {this.state.imageUrl && <img className='slide-show__image' onLoad={revokeOnLoad} src={this.state.imageUrl}/>}
+        {this.state.fetching && <div className='slide-show__spinner'><Spinner/></div>}
       </div>
     )
   }

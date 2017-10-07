@@ -7,18 +7,18 @@ body {
   top: 0;
 }
 
-.slide-show--spinner {
+.slide-show__spinner {
   margin-top: 50px;
   display: flex;
   justify-content: center;
 }
 
-.slide-show--spinner .spinner {
+.slide-show__spinner .spinner {
   height: 90px;
   width: 90px;
 }
 
-.slide-show--image {
+.slide-show__image {
   height: 100vh;
   object-fit: cover;
   width: 100vw;
