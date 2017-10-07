@@ -2,6 +2,7 @@ import './FrontPage.css'
 import { append, compose, composeP, head, lensProp, map, over, pick, reduce } from 'ramda'
 import React, { Component } from 'react'
 import fetchGallery from '../fetch-gallery'
+import GalleryHead from '../gallery-head/GalleryHead.jsx'
 import Spinner from '../spinner/Spinner.jsx'
 
 const galleries = [
@@ -16,13 +17,6 @@ const galleries = [
   'foodporn',
   'unexpected'
 ]
-
-
-const GalleryHead = ({ id, section }) =>
-  <a className="gallery-head" href={`?r=${section}`}>
-    <img className='gallery-head__image' src={`https://i.imgur.com/${id}b.jpg`}/>
-    <span className="gallery-head__name">{section}</span>
-  </a>
 
 const fetchAsGallery = composeP(
   pick(['id', 'section']),
