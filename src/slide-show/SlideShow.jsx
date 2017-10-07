@@ -1,6 +1,6 @@
 import './SlideShow.css'
 
-import { compose, curry, head, map, objOf, path, prop, reduce, replace, tap } from 'ramda'
+import { apply, compose, curry, head, last, map, objOf, path, prop, reduce, replace, tap } from 'ramda'
 import React, { Component } from 'react'
 import { fetchBlob } from '../fetch'
 import fetchGallery from '../fetch-gallery'
@@ -26,13 +26,10 @@ const doSlideShow = handlers => compose(
 const toSlideShow = ({ onImageDownloaded }) => (chain, imageUrl) =>
   chain
     .then(() => Promise.all([fetchBlob(imageUrl), chain.then(pause)]))
-    .then(head)
-    .then(createObjectURL)
-    .then(objectUrl =>
-      getDuration(objectUrl)
-        .then(tap(onImageDownloaded(objectUrl)))
-        .then(objOf('waitTime'))
-    )
+    .then(compose(createObjectURL, head))
+    .then(url => Promise.all([url, getDuration(url)]))
+    .then(tap(apply(onImageDownloaded)))
+    .then(compose(objOf('waitTime'), last))
     .catch(e => {
       console.log(e)
       return Promise.resolve()
