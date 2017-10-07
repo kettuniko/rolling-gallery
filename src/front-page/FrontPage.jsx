@@ -18,7 +18,7 @@ const galleries = [
 ]
 
 
-const Gallery = ({ id, section }) =>
+const GalleryHead = ({ id, section }) =>
   <a className="gallery-head" href={`?r=${section}`}>
     <img className='gallery-head__image' src={`https://i.imgur.com/${id}b.jpg`}/>
     <span className="gallery-head__name">{section}</span>
@@ -61,7 +61,7 @@ export default class FrontPage extends Component {
     return (
       <div className='front-page'>
         <div className="galleries">
-          {map(({ id, section }) => <Gallery id={id} section={section} key={id}/>, galleries)}
+          {map(({ id, section }) => <GalleryHead id={id} section={section} key={id}/>, galleries)}
           {fetching && <div className='gallery-head-spinner'><Spinner/></div>}
         </div>
         <footer className="footer">image copyrights: <a href="https://imgur.com/">imgur.com</a></footer>
