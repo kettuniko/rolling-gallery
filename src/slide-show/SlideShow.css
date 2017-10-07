@@ -17,3 +17,9 @@ body {
   height: 90px;
   width: 90px;
 }
+
+.slide-show--image {
+  height: 100vh;
+  object-fit: cover;
+  width: 100vw;
+}
