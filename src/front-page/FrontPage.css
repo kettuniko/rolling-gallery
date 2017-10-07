@@ -22,12 +22,12 @@ body {
   width: 20%;
 }
 
-.gallery-head img {
+.gallery-head__image {
   width: 101%;
   transition: all .2s;
 }
 
-.gallery-head:hover img {
+.gallery-head:hover .gallery-head__image {
   transform: scale(1.1);
 }
 
@@ -56,7 +56,7 @@ body {
   width: 90px;
 }
 
-footer {
+.footer {
   margin: 20px 0;
   text-align: center;
 }

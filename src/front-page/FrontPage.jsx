@@ -20,7 +20,7 @@ const galleries = [
 
 const Gallery = ({ id, section }) =>
   <a className="gallery-head" href={`?r=${section}`}>
-    <img src={`https://i.imgur.com/${id}b.jpg`}/>
+    <img className='gallery-head__image' src={`https://i.imgur.com/${id}b.jpg`}/>
     <span className="gallery-head__name">{section}</span>
   </a>
 
