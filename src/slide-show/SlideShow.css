@@ -23,3 +23,9 @@ body {
   object-fit: cover;
   width: 100vw;
 }
+
+.slide-show__message {
+  font-size: 64px;
+  font-family: sans-serif;
+  text-align: center;
+}

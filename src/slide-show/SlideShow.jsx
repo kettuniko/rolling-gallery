@@ -1,81 +1,63 @@
 import './SlideShow.css'
 
-import { get } from 'axios'
-import { parse } from 'query-string'
-import { compose, multiply, prop, propOr } from 'ramda'
+import { compose, curry, path, prop, replace } from 'ramda'
 import React, { Component } from 'react'
-import getInfo from 'gif-info'
+import { fetchBlob } from '../fetch'
 import fetchGallery from '../fetch-gallery'
-import toDomNode from '../to-dom-node'
+import getDuration from '../get-duration'
+import Progressbar from '../progressbar/Progressbar.jsx'
 import Spinner from '../spinner/Spinner.jsx'
 
-const cleanUpContent = contentToSaveId => () =>
-  Array.from(document.querySelectorAll('.content'))
-    .filter(content => content.id !== contentToSaveId)
-    .forEach(content => content.remove())
+const { createObjectURL, revokeObjectURL } = window.URL
+const revokeOnLoad = compose(revokeObjectURL, path(['target', 'src']))
 
-const initContent = duration => html => {
-  const id = `content-${new Date().getTime()}`
-  const newContent = toDomNode(`
-    <div class="content content-animated" id="${id}">
-      <div class="progressbar" style="animation-duration: ${duration / 1000}s"></div>
-      ${html}
-    </div>
-  `)
-  document.body.appendChild(newContent)
-  document.querySelector(`#${id}`).addEventListener('animationend', cleanUpContent(id))
-}
+const useHttps = replace('http://', 'https://')
+const toImageUrl = compose(useHttps, prop('link'))
 
-const createTextTag = text => `<h1>${text}</h1>`
-const createImageTag = src => `<img class="rolling-image" src="${src}"/>`
-const showText = text => initContent(Infinity)(createTextTag(text))
+const pause = ({ waitTime }) => new Promise(resolve => setTimeout(resolve, waitTime))
 
-const showImagesFromPage = gallery => pageNumber => () =>
-  fetchGallery(gallery, pageNumber)
-    .then(images => {
-      const galleryPage = showImagesFromPage(gallery)
-      if (images.length) doSlideShow(images, galleryPage(pageNumber + 1))
-      else if (pageNumber !== 0) galleryPage(0)()
-      else showText('Nothing to show :(')
-    })
-    .catch(e => {
-      console.log(e)
-      showText('Error!')
-    })
-
-const pause = duration => () => new Promise(resolve => setTimeout(resolve, duration))
-const doSlideShow = (images, nextPage) =>
+const doSlideShow = (images, handlers) =>
   images
     .map(toImageUrl)
-    .reduce(toSlideShow, Promise.resolve(() => pause(0)))
-    .then(waitForLast => waitForLast())
-    .then(nextPage)
+    .reduce(toSlideShow(handlers), Promise.resolve({ waitTime: 0 }))
+    .then(pause)
 
-const toImageUrl = imageData => imageData.link.replace('http://', 'https://')
-const cleanUpImage = imageUrl => () => window.URL.revokeObjectURL(imageUrl)
-
-const toMilliseconds = multiply(1000)
-const stillImageDuration = compose(toMilliseconds, propOr(5, 'stillSeconds'), parse)
-const animationDuration = ({ isBrowserDuration, durationChrome, duration }) => isBrowserDuration ? durationChrome : duration
-const toDuration = imageInfo => imageInfo.animated ? animationDuration(imageInfo) : stillImageDuration(window.location.search)
-const fetchBlob = url => get(url, { responseType: 'blob' }).then(prop('data'))
-const fetchArrayBuffer = url => get(url, { responseType: 'arraybuffer' }).then(prop('data'))
-const getDuration = objectUrl => fetchArrayBuffer(objectUrl).then(getInfo).then(toDuration)
-const createObjectUrl = blob => Promise.resolve(window.URL.createObjectURL(blob))
-
-const toSlideShow = (chain, imageUrl) =>
+const toSlideShow = ({ onImageDownloaded }) => (chain, imageUrl) =>
   chain
-    .then(() => Promise.all([fetchBlob(imageUrl), chain.then(waitForPrevious => waitForPrevious())]))
-    .then(([blob]) => createObjectUrl(blob)
-      .then(objectUrl => getDuration(objectUrl)
-        .then(duration => Promise.resolve(initContent(duration))
-          .then(contentWith => contentWith(createImageTag(objectUrl)))
-          .then(cleanUpImage(objectUrl))
-          .then(() => pause(duration)))))
+    .then(() => Promise.all([fetchBlob(imageUrl), chain.then(pause)]))
+    .then(([blob]) => createObjectURL(blob))
+    .then(objectUrl =>
+      getDuration(objectUrl)
+        .then(duration => {
+          onImageDownloaded(duration, objectUrl)
+          return { waitTime: duration }
+        })
+    )
     .catch(e => {
       console.log(e)
       return Promise.resolve()
     })
+
+const showImagesFromGalleryPage = curry((gallery, handlers, pageNumber) =>
+  fetchGallery(pageNumber, gallery)
+    .then(images => {
+      const showImagesFromPage = showImagesFromGalleryPage(gallery, handlers)
+      if (images.length) {
+        doSlideShow(images, handlers)
+          .then(() => showImagesFromPage(pageNumber + 1))
+      }
+      else if (pageNumber !== 0) {
+        showImagesFromPage(0)
+      }
+      else {
+        handlers.onMessage('Nothing to show :(')
+      }
+    })
+    .catch(e => {
+      console.log(e)
+      handlers.onMessage('Terrible error!')
+    }))
+
 
 export default class SlideShow extends Component {
   constructor(props) {
@@ -83,19 +65,36 @@ export default class SlideShow extends Component {
 
     this.state = {
       duration: null,
-      imageUrl: null
+      fetching: true,
+      imageUrl: null,
+      message: null
     }
   }
 
   componentDidMount() {
-    showImagesFromPage(this.props.gallery)(0)()
+    showImagesFromGalleryPage(this.props.gallery, {
+      onImageDownloaded: (duration, imageUrl) => {
+        this.setState({
+          duration,
+          imageUrl,
+          fetching: false
+        })
+      },
+      onMessage: message => this.setState({
+        message,
+        fetching: false
+      })
+    }, 0)
   }
 
-  // TODO react rewrite wip
   render() {
+    const { duration, imageUrl, fetching, message } = this.state
     return (
-      <div className="content">
-        <div className='slide-show-spinner'><Spinner/></div>
+      <div className='slide-show'>
+        {duration && <Progressbar key={imageUrl} duration={duration}/>}
+        {imageUrl && <img className='slide-show__image' onLoad={revokeOnLoad} src={imageUrl}/>}
+        {fetching && <div className='slide-show__spinner'><Spinner/></div>}
+        {message && <h2 className='slide-show__message'>{message}</h2>}
       </div>
     )
   }
