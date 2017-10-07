@@ -63,11 +63,12 @@ export default class FrontPage extends Component {
   }
 
   render() {
+    const { fetching, galleries } = this.state
     return (
       <div className='front-page'>
         <div className="galleries">
-          {map(({ id, section }) => <Gallery id={id} section={section} key={id}/>, this.state.galleries)}
-          {this.state.fetching && <div className='gallery-head-spinner'><Spinner/></div>}
+          {map(({ id, section }) => <Gallery id={id} section={section} key={id}/>, galleries)}
+          {fetching && <div className='gallery-head-spinner'><Spinner/></div>}
         </div>
         <footer className="footer">image copyrights: <a href="https://imgur.com/">imgur.com</a></footer>
       </div>
