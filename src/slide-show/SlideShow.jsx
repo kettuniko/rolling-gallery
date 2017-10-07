@@ -1,6 +1,6 @@
 import './SlideShow.css'
 
-import { compose, curry, path, prop, replace } from 'ramda'
+import { compose, curry, map, path, prop, reduce, replace } from 'ramda'
 import React, { Component } from 'react'
 import { fetchBlob } from '../fetch'
 import fetchGallery from '../fetch-gallery'
@@ -16,11 +16,12 @@ const toImageUrl = compose(useHttps, prop('link'))
 
 const pause = ({ waitTime }) => new Promise(resolve => setTimeout(resolve, waitTime))
 
-const doSlideShow = (images, handlers) =>
-  images
-    .map(toImageUrl)
-    .reduce(toSlideShow(handlers), Promise.resolve({ waitTime: 0 }))
-    .then(pause)
+const startImmediately = Promise.resolve({ waitTime: 0 })
+
+const doSlideShow = handlers => compose(
+  reduce(toSlideShow(handlers), startImmediately),
+  map(toImageUrl)
+)
 
 const toSlideShow = ({ onImageDownloaded }) => (chain, imageUrl) =>
   chain
@@ -43,7 +44,8 @@ const showImagesFromGalleryPage = curry((gallery, handlers, pageNumber) =>
     .then(images => {
       const showImagesFromPage = showImagesFromGalleryPage(gallery, handlers)
       if (images.length) {
-        doSlideShow(images, handlers)
+        doSlideShow(handlers)(images)
+          .then(pause)
           .then(() => showImagesFromPage(pageNumber + 1))
       }
       else if (pageNumber !== 0) {
