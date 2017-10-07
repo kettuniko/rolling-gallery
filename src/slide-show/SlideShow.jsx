@@ -33,7 +33,8 @@ const toSlideShow = ({ onImageDownloaded }) => (chain, imageUrl) => composeP(
   url => Promise.all([url, getDuration(url)]),
   compose(createObjectURL, head),
   () => Promise.all([fetchBlob(imageUrl).catch(recover), chain.then(pause)]),
-)(chain)
+  () => chain
+)()
 
 const showImagesFromGalleryPage = curry((gallery, handlers, pageNumber) =>
   fetchGallery(pageNumber, gallery)
