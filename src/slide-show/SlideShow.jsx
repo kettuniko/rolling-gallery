@@ -11,12 +11,11 @@ import Spinner from '../spinner/Spinner.jsx'
 const { createObjectURL, revokeObjectURL } = window.URL
 const revokeOnLoad = compose(revokeObjectURL, path(['target', 'src']))
 
-const useHttps = replace('http://', 'https://')
-const toImageUrl = compose(useHttps, prop('link'))
-
 const pause = ({ waitTime }) => new Promise(resolve => setTimeout(resolve, waitTime))
 
 const startImmediately = Promise.resolve({ waitTime: 0 })
+const useHttps = replace('http://', 'https://')
+const toImageUrl = compose(useHttps, prop('link'))
 
 const doSlideShow = handlers => compose(
   reduce(toSlideShow(handlers), startImmediately),
