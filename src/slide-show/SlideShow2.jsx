@@ -10,7 +10,9 @@ import Spinner from '../spinner/Spinner.jsx'
 
 const { createObjectURL, revokeObjectURL } = window.URL
 const revokeOnLoad = compose(revokeObjectURL, path(['target', 'src']))
-const toImageUrl = compose(replace('http://', 'https://'), prop('link'))
+
+const useHttps = replace('http://', 'https://')
+const toImageUrl = compose(useHttps, prop('link'))
 
 export default class SlideShow extends Component {
   constructor(props) {
