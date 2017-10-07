@@ -44,11 +44,9 @@ const showImagesFromGalleryPage = curry((gallery, handlers, pageNumber) =>
         doSlideShow(handlers)(images)
           .then(pause)
           .then(() => showImagesFromPage(pageNumber + 1))
-      }
-      else if (pageNumber !== 0) {
+      } else if (pageNumber !== 0) {
         showImagesFromPage(0)
-      }
-      else {
+      } else {
         handlers.onMessage('Nothing to show :(')
       }
     })
