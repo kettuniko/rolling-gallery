@@ -24,16 +24,19 @@ const Gallery = ({ id, section }) =>
     <span className="gallery-head__name">{section}</span>
   </a>
 
-const appendToGalleriesF = gallery => over(
-  lensProp('galleries'),
-  append(gallery)
-)
-
 const fetchAsGallery = composeP(
-  appendToGalleriesF,
   pick(['id', 'section']),
   head,
   fetchGallery(0)
+)
+
+const renderSequentially = onSingleDownloaded => (sequence, current) =>
+  sequence.then(() => current.then(onSingleDownloaded))
+
+const renderGalleries = ({ onSingleDownloaded, onAllDownloaded }) => compose(
+  onAllDownloaded,
+  reduce(renderSequentially(onSingleDownloaded), Promise.resolve()),
+  map(fetchAsGallery)
 )
 
 export default class FrontPage extends Component {
@@ -47,19 +50,10 @@ export default class FrontPage extends Component {
   }
 
   componentDidMount() {
-    const renderSequentially = (sequence, current) =>
-      sequence
-        .then(() => current
-          .then(appendToGalleries =>
-            this.setState(appendToGalleries)))
-
-    const renderGalleries = compose(
-      reduce(renderSequentially, Promise.resolve()),
-      map(fetchAsGallery)
-    )
-
-    renderGalleries(galleries)
-      .then(() => this.setState({ fetching: false }))
+    renderGalleries({
+      onSingleDownloaded: gallery => this.setState(over(lensProp('galleries'), append(gallery))),
+      onAllDownloaded: () => this.setState({ fetching: false })
+    })(galleries)
   }
 
   render() {
