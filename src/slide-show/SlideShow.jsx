@@ -1,6 +1,6 @@
 import './SlideShow.css'
 
-import { apply, compose, curry, head, last, map, objOf, path, prop, reduce, replace, tap } from 'ramda'
+import { apply, compose, composeP, curry, head, last, map, objOf, path, prop, reduce, replace, tap } from 'ramda'
 import React, { Component } from 'react'
 import { fetchBlob } from '../fetch'
 import fetchGallery from '../fetch-gallery'
@@ -23,17 +23,18 @@ const doSlideShow = handlers => compose(
   map(toImageUrl)
 )
 
-const toSlideShow = ({ onImageDownloaded }) => (chain, imageUrl) =>
-  chain
-    .then(() => Promise.all([fetchBlob(imageUrl), chain.then(pause)]))
-    .then(compose(createObjectURL, head))
-    .then(url => Promise.all([url, getDuration(url)]))
-    .then(tap(apply(onImageDownloaded)))
-    .then(compose(objOf('waitTime'), last))
-    .catch(e => {
-      console.log(e)
-      return Promise.resolve()
-    })
+const recover = e => {
+  console.log(e)
+  return Promise.resolve()
+}
+
+const toSlideShow = ({ onImageDownloaded }) => (chain, imageUrl) => composeP(
+  compose(objOf('waitTime'), last),
+  tap(apply(onImageDownloaded)),
+  url => Promise.all([url, getDuration(url)]),
+  compose(createObjectURL, head),
+  () => Promise.all([fetchBlob(imageUrl).catch(recover), chain.then(pause)]),
+)(chain)
 
 const showImagesFromGalleryPage = curry((gallery, handlers, pageNumber) =>
   fetchGallery(pageNumber, gallery)
