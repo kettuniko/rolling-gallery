@@ -58,7 +58,10 @@ export default class FrontPage extends Component {
           {map(({ id, section }) => <GalleryHead id={id} section={section} key={id}/>, galleries)}
           {fetching && <div className='gallery-head-spinner'><Spinner/></div>}
         </div>
-        <footer className="footer">image copyrights: <a href="https://imgur.com/">imgur.com</a></footer>
+        <footer className="footer">
+          <span>image copyrights: </span>
+          <a className='footer__link' href="https://imgur.com/">imgur.com</a>
+        </footer>
       </div>
     )
   }

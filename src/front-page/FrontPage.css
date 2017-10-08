@@ -33,9 +33,15 @@ body {
 }
 
 .footer {
+  font-size: 12px;
   background-color: #f2f0f3;
+  color: #7f7d7f;
   padding: 20px 0;
   text-align: center;
+}
+
+.footer__link {
+  color: #7f7d7f;
 }
 
 @media (min-width: 640px) {
