@@ -8,4 +8,4 @@ const stillImageDuration = compose(toMilliseconds, propOr(5, 'stillSeconds'), pa
 const animationDuration = ({ isBrowserDuration, durationChrome, duration }) => isBrowserDuration ? durationChrome : duration
 const toDuration = imageInfo => imageInfo.animated ? animationDuration(imageInfo) : stillImageDuration(window.location.search)
 
-export default composeP(toDuration, getInfo, fetchArrayBuffer)
+export const getDuration = composeP(toDuration, getInfo, fetchArrayBuffer)

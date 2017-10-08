@@ -10,7 +10,7 @@ const getGallery = (pageNumber, gallery) =>
     }
   })
 
-export default curry(
+export const fetchGallery = curry(
   composeP(
     filter(isDisplayAble),
     path(['data', 'data']),

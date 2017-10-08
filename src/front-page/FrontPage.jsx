@@ -1,7 +1,7 @@
 import './FrontPage.css'
 import { append, compose, composeP, head, lensProp, map, over, pick, reduce } from 'ramda'
 import React, { Component } from 'react'
-import fetchGallery from '../fetch-gallery'
+import { fetchGallery } from '../fetch-gallery'
 import Footer from '../footer/Footer.jsx'
 import GalleryHead from '../gallery-head/GalleryHead.jsx'
 import Spinner from '../spinner/Spinner.jsx'
