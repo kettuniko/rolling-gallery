@@ -6,7 +6,7 @@ body {
 .front-page {
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  min-height: 100vh;
   justify-content: space-between;
 }
 
@@ -16,7 +16,7 @@ body {
 }
 
 .gallery-head {
-  width: 20%;
+  width: 50%;
 }
 
 .gallery-head-spinner {
@@ -36,4 +36,16 @@ body {
   background-color: #f2f0f3;
   padding: 20px 0;
   text-align: center;
+}
+
+@media (min-width: 640px) {
+  .gallery-head {
+    width: 25%;
+  }
+}
+
+@media (min-width: 960px) {
+  .gallery-head {
+    width: 20%;
+  }
 }
