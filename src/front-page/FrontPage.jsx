@@ -59,8 +59,14 @@ export default class FrontPage extends Component {
           {fetching && <div className='gallery-head-spinner'><Spinner/></div>}
         </div>
         <footer className="footer">
-          <span>image copyrights: </span>
-          <a className='footer__link' href="https://imgur.com/">imgur.com</a>
+          <div>
+            <span className='footer__title'>View it on&nbsp;</span>
+            <a className='footer__link' href="https://github.com/kettuniko/rolling-gallery">Github</a>
+          </div>
+          <div>
+            <span className='footer__title'>Image copyrights&nbsp;</span>
+            <a className='footer__link' href="https://imgur.com/">imgur.com</a>
+          </div>
         </footer>
       </div>
     )
