@@ -15,6 +15,10 @@ body {
   flex-wrap: wrap;
 }
 
+.gallery-head {
+  width: 20%;
+}
+
 .gallery-head-spinner {
   align-items: center;
   display: flex;
