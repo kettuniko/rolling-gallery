@@ -1,0 +1,16 @@
+.footer {
+  font-size: 12px;
+  background-color: #f2f0f3;
+  color: #7f7d7f;
+  padding: 10px 0;
+  text-align: center;
+}
+
+.footer__title {
+  line-height: 18px;
+}
+
+.footer__link {
+  color: #7f7d7f;
+  padding-bottom: 5px;
+}

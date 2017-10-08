@@ -2,6 +2,7 @@ import './FrontPage.css'
 import { append, compose, composeP, head, lensProp, map, over, pick, reduce } from 'ramda'
 import React, { Component } from 'react'
 import fetchGallery from '../fetch-gallery'
+import Footer from '../footer/Footer.jsx'
 import GalleryHead from '../gallery-head/GalleryHead.jsx'
 import Spinner from '../spinner/Spinner.jsx'
 
@@ -58,16 +59,7 @@ export default class FrontPage extends Component {
           {map(({ id, section }) => <GalleryHead id={id} section={section} key={id}/>, galleries)}
           {fetching && <div className='gallery-head-spinner'><Spinner/></div>}
         </div>
-        <footer className="footer">
-          <div>
-            <span className='footer__title'>View it on&nbsp;</span>
-            <a className='footer__link' href="https://github.com/kettuniko/rolling-gallery">Github</a>
-          </div>
-          <div>
-            <span className='footer__title'>Image copyrights&nbsp;</span>
-            <a className='footer__link' href="https://imgur.com/">imgur.com</a>
-          </div>
-        </footer>
+        <Footer />
       </div>
     )
   }
