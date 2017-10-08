@@ -22,5 +22,11 @@
   right: 0;
   text-align: center;
   text-shadow: 0 0 5px #040404;
-  font-size: 32px;
+  font-size: 24px;
+}
+
+@media (min-width: 960px) {
+  .gallery-head__name {
+    font-size: 32px;
+  }
 }
