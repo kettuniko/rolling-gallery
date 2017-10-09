@@ -1,11 +1,23 @@
-import getInfo from 'gif-info'
-import { parse as parseQueryString } from 'query-string'
-import { compose, composeP, multiply, propOr } from 'ramda'
-import { fetchArrayBuffer } from './fetch'
+import { composeP, multiply } from 'ramda'
+import { fetchBlob } from './fetch'
 
-const toMilliseconds = multiply(1000)
-const stillImageDuration = compose(toMilliseconds, propOr(5, 'stillSeconds'), parseQueryString)
-const animationDuration = ({ isBrowserDuration, durationChrome, duration }) => isBrowserDuration ? durationChrome : duration
-const toDuration = imageInfo => imageInfo.animated ? animationDuration(imageInfo) : stillImageDuration(window.location.search)
+const getObjectDuration = url =>
+  new Promise((resolve, reject) => {
+    const video = document.createElement('video')
+    video.setAttribute('src', url)
+    video.addEventListener('durationchange', () => {
+      const { duration } = video
+      if (duration) {
+        resolve(duration)
+      } else {
+        reject('Could not get duration for video')
+      }
+    })
+  })
 
-export const getDuration = composeP(toDuration, getInfo, fetchArrayBuffer)
+export const getDuration = composeP(
+  multiply(1000),
+  getObjectDuration,
+  window.URL.createObjectURL,
+  fetchBlob
+)
