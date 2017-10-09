@@ -1,7 +1,4 @@
-import { get as axiosGet } from 'axios'
-import { composeP, curry, flip, prop} from 'ramda'
+import { composeP } from 'ramda'
 
-const get = curry(composeP(prop('data'), flip(axiosGet)))
-
-export const fetchBlob = get({ responseType: 'blob' })
-export const fetchArrayBuffer = get({ responseType: 'arraybuffer' })
+export const fetchBlob = composeP(r => r.blob(), window.fetch)
+export const fetchJson = composeP(r => r.json(), window.fetch)
