@@ -61,7 +61,7 @@ export default class FrontPage extends Component {
           {map(({ id, section }) => <GalleryHead id={id} section={section} key={id}/>, galleries)}
           {fetching && <div className='gallery-head-spinner'><Spinner/></div>}
         </div>
-        <Footer />
+        <Footer/>
       </div>
     )
   }
