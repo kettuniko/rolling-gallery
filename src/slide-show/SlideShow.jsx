@@ -26,13 +26,13 @@ const toDuration = (animated, objectUrl) =>
     getDuration(objectUrl) :
     stillImageDuration(window.location.search)
 
-const toSlideShow = ({ onImageDownloaded }) => (chain, { animated, mp4, link }) =>
+const toSlideShow = ({ onItemDownloaded }) => (chain, { animated, mp4, link }) =>
   chain
     .then(() => animated ? mp4 : link)
     .then(url => Promise.all([fetchBlob(url), chain.then(pause)]))
     .then(compose(createObjectURL, head))
     .then(objectUrl => Promise.all([animated, objectUrl, toDuration(animated, objectUrl)]))
-    .then(tap(apply(onImageDownloaded)))
+    .then(tap(apply(onItemDownloaded)))
     .then(compose(objOf('waitTime'), last))
     .catch(e => {
       console.log(e)
@@ -41,10 +41,10 @@ const toSlideShow = ({ onImageDownloaded }) => (chain, { animated, mp4, link }) 
 
 const showImagesFromGalleryPage = curry((gallery, handlers, pageNumber) =>
   fetchGallery(pageNumber, gallery)
-    .then(images => {
+    .then(items => {
       const showImagesFromPage = showImagesFromGalleryPage(gallery, handlers)
-      if (images.length) {
-        doSlideShow(handlers)(images)
+      if (items.length) {
+        doSlideShow(handlers)(items)
           .then(pause)
           .then(() => showImagesFromPage(pageNumber + 1))
       } else if (pageNumber !== 0) {
@@ -66,18 +66,18 @@ export default class SlideShow extends Component {
       animated: null,
       duration: null,
       fetching: true,
-      imageUrl: null,
+      itemUrl: null,
       message: null
     }
   }
 
   componentDidMount() {
     showImagesFromGalleryPage(this.props.gallery, {
-      onImageDownloaded: (animated, imageUrl, duration) => {
+      onItemDownloaded: (animated, itemUrl, duration) => {
         this.setState({
           animated,
           duration,
-          imageUrl,
+          itemUrl,
           fetching: false
         })
       },
@@ -89,12 +89,12 @@ export default class SlideShow extends Component {
   }
 
   render() {
-    const { animated, duration, imageUrl, fetching, message } = this.state
+    const { animated, duration, itemUrl, fetching, message } = this.state
     return (
       <div className='slide-show'>
-        {duration && <Progressbar key={imageUrl} duration={duration}/>}
-        {imageUrl && animated && <video className='slide-show__image' src={imageUrl} onLoad={revokeOnLoad} loop autoPlay/>}
-        {imageUrl && !animated && <img className='slide-show__image' src={imageUrl} />}
+        {duration && <Progressbar key={itemUrl} duration={duration}/>}
+        {itemUrl && animated && <video className='slide-show__item' src={itemUrl} onLoad={revokeOnLoad} loop autoPlay/>}
+        {itemUrl && !animated && <img className='slide-show__item' src={itemUrl} />}
         {fetching && <div className='slide-show__spinner'><Spinner/></div>}
         {message && <h2 className='slide-show__message'>{message}</h2>}
       </div>

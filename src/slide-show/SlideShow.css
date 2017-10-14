@@ -18,7 +18,7 @@ body {
   width: 90px;
 }
 
-.slide-show__image {
+.slide-show__item {
   height: 100vh;
   object-fit: cover;
   width: 100vw;
