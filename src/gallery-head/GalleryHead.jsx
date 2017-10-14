@@ -16,10 +16,10 @@ export default class GalleryHead extends Component {
     const { fetching } = this.state
 
     return (
-      <a className="gallery-head" href={`?r=${section}`}>
+      <a className='gallery-head' href={`?r=${section}`}>
         {fetching && <span className='gallery-head__spinner'><Spinner/></span>}
         <img className='gallery-head__image' src={`https://i.imgur.com/${id}b.jpg`}/>
-        <span className="gallery-head__name">{section}</span>
+        <span className='gallery-head__name'>{section}</span>
       </a>
     )
   }

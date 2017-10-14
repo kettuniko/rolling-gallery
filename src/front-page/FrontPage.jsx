@@ -56,7 +56,7 @@ export default class FrontPage extends Component {
     const { fetching, galleries } = this.state
     return (
       <div className='front-page'>
-        <div className="galleries">
+        <div className='galleries'>
           {map(item => <GalleryHead item={item} key={item.id}/>, galleries)}
           {fetching && <div className='gallery-head-spinner'><Spinner/></div>}
         </div>
