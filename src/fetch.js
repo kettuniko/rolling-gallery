@@ -1,4 +1,4 @@
-import { composeP } from 'ramda'
+import { composeP, invoker, } from 'ramda'
 
-export const fetchBlob = composeP(r => r.blob(), window.fetch)
-export const fetchJson = composeP(r => r.json(), window.fetch)
+export const fetchBlob = composeP(invoker(0, 'blob'), window.fetch)
+export const fetchJson = composeP(invoker(0, 'json'), window.fetch)
