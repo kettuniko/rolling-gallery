@@ -1,6 +1,6 @@
 import './SlideShow.css'
 
-import { apply, compose, curry, head, last, map, multiply, objOf, path, propOr, reduce, tap } from 'ramda'
+import { apply, compose, curry, head, last, multiply, objOf, path, propOr, reduce, tap } from 'ramda'
 import React, { Component } from 'react'
 import { parse as parseQueryString } from 'query-string'
 import { fetchBlob } from '../fetch'
@@ -31,7 +31,7 @@ const toSlideShow = ({ onImageDownloaded }) => (chain, { animated, mp4, link }) 
     .then(() => animated ? mp4 : link)
     .then(url => Promise.all([fetchBlob(url), chain.then(pause)]))
     .then(compose(createObjectURL, head))
-    .then(objectUrl => Promise.all([objectUrl, toDuration(animated, objectUrl)]))
+    .then(objectUrl => Promise.all([animated, objectUrl, toDuration(animated, objectUrl)]))
     .then(tap(apply(onImageDownloaded)))
     .then(compose(objOf('waitTime'), last))
     .catch(e => {
@@ -63,6 +63,7 @@ export default class SlideShow extends Component {
     super(props)
 
     this.state = {
+      animated: null,
       duration: null,
       fetching: true,
       imageUrl: null,
@@ -72,13 +73,14 @@ export default class SlideShow extends Component {
 
   componentDidMount() {
     showImagesFromGalleryPage(this.props.gallery, {
-      onImageDownloaded: curry((imageUrl, duration) => {
+      onImageDownloaded: (animated, imageUrl, duration) => {
         this.setState({
+          animated,
           duration,
           imageUrl,
           fetching: false
         })
-      }),
+      },
       onMessage: message => this.setState({
         message,
         fetching: false
@@ -87,11 +89,12 @@ export default class SlideShow extends Component {
   }
 
   render() {
-    const { duration, imageUrl, fetching, message } = this.state
+    const { animated, duration, imageUrl, fetching, message } = this.state
     return (
       <div className='slide-show'>
         {duration && <Progressbar key={imageUrl} duration={duration}/>}
-        {imageUrl && <video className='slide-show__image' src={imageUrl} onLoad={revokeOnLoad} loop autoPlay/>}
+        {imageUrl && animated && <video className='slide-show__image' src={imageUrl} onLoad={revokeOnLoad} loop autoPlay/>}
+        {imageUrl && !animated && <img className='slide-show__image' src={imageUrl} />}
         {fetching && <div className='slide-show__spinner'><Spinner/></div>}
         {message && <h2 className='slide-show__message'>{message}</h2>}
       </div>
