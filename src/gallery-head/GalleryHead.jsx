@@ -12,7 +12,7 @@ export default class GalleryHead extends Component {
   }
 
   render() {
-    const { section, id } = this.props
+    const { item: { section, id } } = this.props
     const { fetching } = this.state
 
     return (

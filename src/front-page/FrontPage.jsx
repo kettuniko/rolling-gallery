@@ -1,5 +1,5 @@
 import './FrontPage.css'
-import { append, compose, composeP, head, lensProp, map, over, pick, reduce } from 'ramda'
+import { append, compose, composeP, head, lensProp, map, over, reduce } from 'ramda'
 import React, { Component } from 'react'
 import { fetchGallery } from '../fetch-gallery'
 import Footer from '../footer/Footer.jsx'
@@ -20,7 +20,6 @@ const galleries = [
 ]
 
 const fetchAsGallery = composeP(
-  pick(['id', 'section']),
   head,
   fetchGallery(0)
 )
@@ -58,7 +57,7 @@ export default class FrontPage extends Component {
     return (
       <div className='front-page'>
         <div className="galleries">
-          {map(({ id, section }) => <GalleryHead id={id} section={section} key={id}/>, galleries)}
+          {map(item => <GalleryHead item={item} key={item.id}/>, galleries)}
           {fetching && <div className='gallery-head-spinner'><Spinner/></div>}
         </div>
         <Footer/>
