@@ -29,8 +29,10 @@ const renderSequentially = onSingleDownloaded => (sequence, current) =>
   sequence.then(() => current.then(onSingleDownloaded))
 
 const renderGalleries = ({ onSingleDownloaded, onAllDownloaded }) => compose(
-  onAllDownloaded,
-  reduce(renderSequentially(onSingleDownloaded), Promise.resolve()),
+  composeP(
+    onAllDownloaded,
+    reduce(renderSequentially(onSingleDownloaded), Promise.resolve())
+  ),
   map(fetchAsGallery)
 )
 

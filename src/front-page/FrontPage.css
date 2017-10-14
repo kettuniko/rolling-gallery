@@ -23,8 +23,8 @@ body {
   align-items: center;
   display: flex;
   justify-content: center;
-  min-height: 350px;
-  width: 20%;
+  min-height: 189px;
+  width: 50%;
 }
 
 .gallery-head-spinner .spinner {
@@ -36,10 +36,18 @@ body {
   .gallery-head {
     width: 25%;
   }
+
+  .gallery-head-spinner{
+    width: 25%;
+  }
 }
 
 @media (min-width: 960px) {
   .gallery-head {
+    width: 20%;
+  }
+
+  .gallery-head-spinner{
     width: 20%;
   }
 }
