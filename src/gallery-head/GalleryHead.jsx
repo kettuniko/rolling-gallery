@@ -7,7 +7,7 @@ export default class GalleryHead extends Component {
     super(props)
 
     this.state = {
-      fetching: false
+      fetching: true
     }
   }
 
@@ -18,7 +18,7 @@ export default class GalleryHead extends Component {
     return (
       <a className='gallery-head' href={`?r=${section}`}>
         {fetching && <span className='gallery-head__spinner'><Spinner/></span>}
-        <img className='gallery-head__image' src={`https://i.imgur.com/${id}b.jpg`}/>
+        {fetching && <img className='gallery-head__image' src={`https://i.imgur.com/${id}b.jpg`}/>}
         <span className='gallery-head__name'>{section}</span>
       </a>
     )
