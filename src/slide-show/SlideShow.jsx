@@ -93,7 +93,7 @@ export default class SlideShow extends Component {
     return (
       <div className='slide-show'>
         {duration && <Progressbar key={itemUrl} duration={duration}/>}
-        {itemUrl && animated && <video className='slide-show__item' src={itemUrl} onLoad={revokeOnLoad} loop autoPlay muted/>}
+        {itemUrl && animated && <video className='slide-show__item' src={itemUrl} onLoad={revokeOnLoad} loop autoPlay muted playsInline/>}
         {itemUrl && !animated && <img className='slide-show__item' src={itemUrl} />}
         {fetching && <div className='slide-show__spinner'><Spinner/></div>}
         {message && <h2 className='slide-show__message'>{message}</h2>}
