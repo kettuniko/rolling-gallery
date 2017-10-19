@@ -3,6 +3,7 @@
   overflow: hidden;
   text-decoration: none;
   position: relative;
+  max-height: 40vh;
 }
 
 .gallery-head__spinner {
@@ -12,12 +13,18 @@
   z-index: 1;
 }
 
-.gallery-head__image {
+.gallery-head__image, .gallery-head .gallery-item {
   width: 100%;
   transition: all .2s;
 }
 
-.gallery-head:hover .gallery-head__image {
+.gallery-head .gallery-item {
+  object-position: center;
+  object-fit: cover;
+  height: 100%;
+}
+
+.gallery-head:hover .gallery-head__image, .gallery-head:hover .gallery-item {
   transform: scale(1.1);
 }
 

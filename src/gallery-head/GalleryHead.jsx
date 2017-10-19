@@ -1,6 +1,7 @@
 import './GalleryHead.css'
 import React, { Component } from 'react'
 import Spinner from '../spinner/Spinner.jsx'
+import GalleryItem from '../gallery-item/GalleryItem.jsx'
 
 export default class GalleryHead extends Component {
   constructor(props) {
@@ -11,8 +12,15 @@ export default class GalleryHead extends Component {
     }
   }
 
+  markReady() {
+    this.setState({
+      fetching: false
+    })
+  }
+
   render() {
-    const { item: { section, id } } = this.props
+    const { item } = this.props
+    const { section, id } = item
     const { fetching } = this.state
     const thumbnailImage = `https://i.imgur.com/${id}b.jpg`
 
@@ -20,6 +28,7 @@ export default class GalleryHead extends Component {
       <a className='gallery-head' href={`?r=${section}`}>
         {fetching && <span className='gallery-head__spinner'><Spinner/></span>}
         {fetching && <img className='gallery-head__image' src={thumbnailImage}/>}
+        <GalleryItem item={item} onLoad={() => this.markReady()}/>
         <span className='gallery-head__name'>{section}</span>
       </a>
     )
