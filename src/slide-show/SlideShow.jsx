@@ -5,6 +5,7 @@ import React, { Component } from 'react'
 import { parse as parseQueryString } from 'query-string'
 import { fetchGallery } from '../fetch-gallery'
 import { getDuration } from '../get-duration'
+import GalleryItem from '../gallery-item/GalleryItem.jsx'
 import Progressbar from '../progressbar/Progressbar.jsx'
 import Spinner from '../spinner/Spinner.jsx'
 
@@ -85,8 +86,7 @@ export default class SlideShow extends Component {
     return (
       <div className='slide-show'>
         {duration && <Progressbar key={item.id} duration={duration}/>}
-        {item && item.animated && <video className='slide-show__item' src={item.mp4} loop autoPlay muted playsInline/>}
-        {item && !item.animated && <img className='slide-show__item' src={item.link} />}
+        {item && <GalleryItem item={item} />}
         {fetching && <div className='slide-show__spinner'><Spinner/></div>}
         {message && <h2 className='slide-show__message'>{message}</h2>}
       </div>
