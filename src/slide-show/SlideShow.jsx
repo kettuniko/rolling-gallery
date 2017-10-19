@@ -17,16 +17,15 @@ const stillImageDuration = compose(toMilliseconds, propOr(5, 'stillSeconds'), pa
 
 const doSlideShow = handlers => reduce(toSlideShow(handlers), startImmediately)
 
-const toDuration = (animated, url) =>
-  animated ?
-    getDuration(url) :
+const toDuration = ({ mp4 }) =>
+  mp4 ?
+    getDuration(mp4) :
     stillImageDuration(window.location.search)
 
-const toSlideShow = ({ onItemDownloaded }) => (chain, { animated, mp4, link }) =>
+const toSlideShow = ({ onItemDownloaded }) => (chain, item) =>
   chain
     .then(pause)
-    .then(() => animated ? mp4 : link)
-    .then(url => Promise.all([animated, url, toDuration(animated, url)]))
+    .then(url => Promise.all([item, toDuration(item)]))
     .then(tap(apply(onItemDownloaded)))
     .then(compose(objOf('waitTime'), last))
     .catch(e => {
@@ -58,21 +57,19 @@ export default class SlideShow extends Component {
     super(props)
 
     this.state = {
-      animated: null,
+      item: null,
       duration: null,
       fetching: true,
-      itemUrl: null,
       message: null
     }
   }
 
   componentDidMount() {
     showImagesFromGalleryPage(this.props.gallery, {
-      onItemDownloaded: (animated, itemUrl, duration) => {
+      onItemDownloaded: (item, duration) => {
         this.setState({
-          animated,
+          item,
           duration,
-          itemUrl,
           fetching: false
         })
       },
@@ -84,12 +81,12 @@ export default class SlideShow extends Component {
   }
 
   render() {
-    const { animated, duration, itemUrl, fetching, message } = this.state
+    const { item, duration, fetching, message } = this.state
     return (
       <div className='slide-show'>
-        {duration && <Progressbar key={itemUrl} duration={duration}/>}
-        {itemUrl && animated && <video className='slide-show__item' src={itemUrl} loop autoPlay muted playsInline/>}
-        {itemUrl && !animated && <img className='slide-show__item' src={itemUrl} />}
+        {duration && <Progressbar key={item.id} duration={duration}/>}
+        {item && item.animated && <video className='slide-show__item' src={item.mp4} loop autoPlay muted playsInline/>}
+        {item && !item.animated && <img className='slide-show__item' src={item.link} />}
         {fetching && <div className='slide-show__spinner'><Spinner/></div>}
         {message && <h2 className='slide-show__message'>{message}</h2>}
       </div>
