@@ -16,7 +16,7 @@ body {
 }
 
 .gallery-head {
-  width: 50%;
+  width: 100%;
 }
 
 .gallery-head-spinner {
@@ -24,7 +24,7 @@ body {
   display: flex;
   justify-content: center;
   min-height: 189px;
-  width: 50%;
+  width: 100%;
 }
 
 .gallery-head-spinner .spinner {
@@ -34,11 +34,11 @@ body {
 
 @media (min-width: 640px) {
   .gallery-head {
-    width: 25%;
+    width: 50%;
   }
 
   .gallery-head-spinner{
-    width: 25%;
+    width: 50%;
   }
 }
 
