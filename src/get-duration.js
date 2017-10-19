@@ -1,5 +1,4 @@
 import { composeP, multiply } from 'ramda'
-import { fetchBlob } from './fetch'
 
 const getObjectDuration = url =>
   new Promise((resolve, reject) => {
@@ -17,7 +16,5 @@ const getObjectDuration = url =>
 
 export const getDuration = composeP(
   multiply(1000),
-  getObjectDuration,
-  window.URL.createObjectURL,
-  fetchBlob
+  getObjectDuration
 )

@@ -1,16 +1,12 @@
 import './SlideShow.css'
 
-import { apply, compose, curry, head, last, multiply, objOf, path, propOr, reduce, tap } from 'ramda'
+import { apply, compose, curry, last, multiply, objOf, propOr, reduce, tap } from 'ramda'
 import React, { Component } from 'react'
 import { parse as parseQueryString } from 'query-string'
-import { fetchBlob } from '../fetch'
 import { fetchGallery } from '../fetch-gallery'
 import { getDuration } from '../get-duration'
 import Progressbar from '../progressbar/Progressbar.jsx'
 import Spinner from '../spinner/Spinner.jsx'
-
-const { createObjectURL, revokeObjectURL } = window.URL
-const revokeOnLoad = compose(revokeObjectURL, path(['target', 'src']))
 
 const pause = ({ waitTime }) => new Promise(resolve => setTimeout(resolve, waitTime))
 
@@ -21,17 +17,16 @@ const stillImageDuration = compose(toMilliseconds, propOr(5, 'stillSeconds'), pa
 
 const doSlideShow = handlers => reduce(toSlideShow(handlers), startImmediately)
 
-const toDuration = (animated, objectUrl) =>
+const toDuration = (animated, url) =>
   animated ?
-    getDuration(objectUrl) :
+    getDuration(url) :
     stillImageDuration(window.location.search)
 
 const toSlideShow = ({ onItemDownloaded }) => (chain, { animated, mp4, link }) =>
   chain
+    .then(pause)
     .then(() => animated ? mp4 : link)
-    .then(url => Promise.all([fetchBlob(url), chain.then(pause)]))
-    .then(compose(createObjectURL, head))
-    .then(objectUrl => Promise.all([animated, objectUrl, toDuration(animated, objectUrl)]))
+    .then(url => Promise.all([animated, url, toDuration(animated, url)]))
     .then(tap(apply(onItemDownloaded)))
     .then(compose(objOf('waitTime'), last))
     .catch(e => {
@@ -93,7 +88,7 @@ export default class SlideShow extends Component {
     return (
       <div className='slide-show'>
         {duration && <Progressbar key={itemUrl} duration={duration}/>}
-        {itemUrl && animated && <video className='slide-show__item' src={itemUrl} onLoad={revokeOnLoad} loop autoPlay muted playsInline/>}
+        {itemUrl && animated && <video className='slide-show__item' src={itemUrl} loop autoPlay muted playsInline/>}
         {itemUrl && !animated && <img className='slide-show__item' src={itemUrl} />}
         {fetching && <div className='slide-show__spinner'><Spinner/></div>}
         {message && <h2 className='slide-show__message'>{message}</h2>}
