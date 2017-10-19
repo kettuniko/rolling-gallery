@@ -14,11 +14,12 @@ export default class GalleryHead extends Component {
   render() {
     const { item: { section, id } } = this.props
     const { fetching } = this.state
+    const thumbnailImage = `https://i.imgur.com/${id}b.jpg`
 
     return (
       <a className='gallery-head' href={`?r=${section}`}>
         {fetching && <span className='gallery-head__spinner'><Spinner/></span>}
-        {fetching && <img className='gallery-head__image' src={`https://i.imgur.com/${id}b.jpg`}/>}
+        {fetching && <img className='gallery-head__image' src={thumbnailImage}/>}
         <span className='gallery-head__name'>{section}</span>
       </a>
     )
