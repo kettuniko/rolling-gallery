@@ -22,12 +22,11 @@ export default class GalleryHead extends Component {
     const { item } = this.props
     const { section, id } = item
     const { fetching } = this.state
-    const thumbnailImage = `https://i.imgur.com/${id}b.jpg`
 
     return (
       <a className='gallery-head' href={`?r=${section}`}>
         {fetching && <span className='gallery-head__spinner'><Spinner/></span>}
-        {fetching && <img className='gallery-head__image' src={thumbnailImage}/>}
+        {fetching && <img className='gallery-head__thumbnail' src={`https://i.imgur.com/${id}b.jpg`}/>}
         <GalleryItem item={item} onLoad={() => this.markReady()}/>
         <span className='gallery-head__name'>{section}</span>
       </a>
