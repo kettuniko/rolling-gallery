@@ -2,7 +2,7 @@ body {
   margin: 0;
 }
 
-.progressbar {
+.slide-show .progressbar {
   position: absolute;
   top: 0;
 }
