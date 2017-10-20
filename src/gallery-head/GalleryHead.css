@@ -22,7 +22,8 @@
   object-fit: cover;
 }
 
-.gallery-head:hover .gallery-head__thumbnail, .gallery-head:hover .gallery-item {
+.gallery-head:hover .gallery-head__thumbnail,
+.gallery-head:hover .gallery-item {
   transform: scale(1.1);
 }
 
