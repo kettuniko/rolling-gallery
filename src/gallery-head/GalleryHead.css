@@ -16,13 +16,10 @@
 
 .gallery-head__image, .gallery-head .gallery-item {
   width: 100%;
+  height: 100%;
   transition: all .2s;
-}
-
-.gallery-head .gallery-item {
   object-position: center;
   object-fit: cover;
-  height: 100%;
 }
 
 .gallery-head:hover .gallery-head__image, .gallery-head:hover .gallery-item {
