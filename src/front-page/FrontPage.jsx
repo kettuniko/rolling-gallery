@@ -10,11 +10,13 @@ const galleries = [
   'brokengifs',
   'wastedgifs',
   'earthporn',
+  'mildlyinteresting',
   'reactiongifs',
   'gifs',
   'wallpapers',
   'woahdude',
   'perfecttiming',
+  'oddlysatisfying',
   'foodporn',
   'unexpected'
 ]
