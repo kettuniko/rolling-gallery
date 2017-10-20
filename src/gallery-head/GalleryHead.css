@@ -3,7 +3,7 @@
   overflow: hidden;
   text-decoration: none;
   position: relative;
-  max-height: 40vh;
+  height: 50vh;
 }
 
 .gallery-head__spinner {
