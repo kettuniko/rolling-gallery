@@ -43,23 +43,23 @@ export default class FrontPage extends Component {
 
     this.state = {
       fetching: true,
-      galleries: []
+      galleryHeads: []
     }
   }
 
   componentDidMount() {
     renderGalleries({
-      onSingleDownloaded: gallery => this.setState(over(lensProp('galleries'), append(gallery))),
+      onSingleDownloaded: gallery => this.setState(over(lensProp('galleryHeads'), append(gallery))),
       onAllDownloaded: () => this.setState({ fetching: false })
     })(galleries)
   }
 
   render() {
-    const { fetching, galleries } = this.state
+    const { fetching, galleryHeads } = this.state
     return (
       <div className='front-page'>
         <div className='galleries'>
-          {map(item => <GalleryHead item={item} key={item.id}/>, galleries)}
+          {map(galleryHead => <GalleryHead item={galleryHead} key={galleryHead.id}/>, galleryHeads)}
           {fetching && <div className='gallery-head-spinner'><Spinner/></div>}
         </div>
         <Footer/>
