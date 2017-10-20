@@ -5,7 +5,7 @@ export default function Footer() {
   return (
     <footer className='footer'>
       <div>
-        <span className='footer__title'>View it on&nbsp;</span>
+        <span className='footer__title'>View source on&nbsp;</span>
         <a className='footer__link' href="https://github.com/kettuniko/rolling-gallery">Github</a>
       </div>
       <div>
