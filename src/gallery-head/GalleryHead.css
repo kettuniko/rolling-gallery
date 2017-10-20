@@ -4,6 +4,7 @@
   text-decoration: none;
   position: relative;
   height: 50vh;
+  transition: height 999999s;
 }
 
 .gallery-head__spinner {
