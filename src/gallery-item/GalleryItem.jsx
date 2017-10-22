@@ -24,8 +24,8 @@ export default class GalleryItem extends Component {
     if (video) {
       const { bottom, top, width } = video.getBoundingClientRect()
       const topInsideViewPort = top >= 0
-      const bottomInsideViewPort = bottom < window.outerHeight
-      const onlyHorizontalItem = width === window.outerWidth
+      const bottomInsideViewPort = bottom < window.innerHeight
+      const onlyHorizontalItem = width === window.innerWidth
       const bestItemInViewPort = topInsideViewPort && bottomInsideViewPort && onlyHorizontalItem
       bestItemInViewPort ? video.play() : video.pause()
     }
@@ -43,7 +43,7 @@ export default class GalleryItem extends Component {
                ref={video => this.video = video}
                onMouseOver={whenAutoPlayDisabled(() => this.video.play())}
                onMouseOut={whenAutoPlayDisabled(() => this.video.pause())}
-               autoPlay={autoPlay}
+               autoPlay
                loop
                muted
                playsInline/>
