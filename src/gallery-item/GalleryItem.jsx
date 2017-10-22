@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import { __, always, equals, ifElse } from 'ramda'
 
 export default class GalleryItem extends Component {
   constructor(props) {
@@ -31,18 +30,24 @@ export default class GalleryItem extends Component {
     }
   }
 
-  render() {
-    const { item: { animated, link, mp4 }, onLoad, playOnHover } = this.props
+  playVideo(play) {
+    if (this.props.playOnHover && !play) {
+      this.video.pause()
+    } else {
+      this.video.play()
+    }
+  }
 
-    const playOnHoverEnabled = ifElse(equals(true), always, __, playOnHover)
+  render() {
+    const { item: { animated, link, mp4 }, onLoad } = this.props
 
     return animated
       ? <video className='gallery-item'
                src={mp4}
                onCanPlayThrough={onLoad}
                ref={video => this.video = video}
-               onMouseOver={playOnHoverEnabled(() => this.video.play())}
-               onMouseOut={playOnHoverEnabled(() => this.video.pause())}
+               onMouseOver={() => this.playVideo(true)}
+               onMouseOut={() => this.playVideo(false)}
                autoPlay
                loop
                muted
