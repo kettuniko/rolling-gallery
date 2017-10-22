@@ -4,22 +4,22 @@ import { __, always, equals, ifElse } from 'ramda'
 export default class GalleryItem extends Component {
   constructor(props) {
     super(props)
-    this.playVideo = this.playVideo.bind(this)
+    this.playVideoWithinViewport = this.playVideoWithinViewport.bind(this)
   }
 
   componentDidMount() {
-    window.addEventListener('scroll', this.playVideo)
+    window.addEventListener('scroll', this.playVideoWithinViewport)
   }
 
   componentWillUnmount() {
-    window.removeEventListener('scroll', this.playVideo)
+    window.removeEventListener('scroll', this.playVideoWithinViewport)
   }
 
   componentDidUpdate() {
-    this.playVideo()
+    this.playVideoWithinViewport()
   }
 
-  playVideo() {
+  playVideoWithinViewport() {
     const video = this.video
     if (video) {
       const { bottom, top, width } = video.getBoundingClientRect()
