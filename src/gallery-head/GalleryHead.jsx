@@ -27,7 +27,7 @@ export default class GalleryHead extends Component {
       <a className='gallery-head' href={`?r=${section}`}>
         {fetching && <span className='gallery-head__spinner'><Spinner/></span>}
         {fetching && <img className='gallery-head__thumbnail' src={`https://i.imgur.com/${id}b.jpg`}/>}
-        <GalleryItem item={item} onLoad={() => this.markReady()}/>
+        <GalleryItem playOnHover item={item} onLoad={() => this.markReady()}/>
         <span className='gallery-head__name'>{section}</span>
       </a>
     )
