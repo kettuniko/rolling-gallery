@@ -32,17 +32,17 @@ export default class GalleryItem extends Component {
   }
 
   render() {
-    const { item: { animated, link, mp4 }, onLoad, autoPlay } = this.props
+    const { item: { animated, link, mp4 }, onLoad, playOnHover } = this.props
 
-    const whenAutoPlayDisabled = ifElse(equals(true), always, __, autoPlay)
+    const playOnHoverEnabled = ifElse(equals(true), always, __, playOnHover)
 
     return animated
       ? <video className='gallery-item'
                src={mp4}
                onCanPlayThrough={onLoad}
                ref={video => this.video = video}
-               onMouseOver={whenAutoPlayDisabled(() => this.video.play())}
-               onMouseOut={whenAutoPlayDisabled(() => this.video.pause())}
+               onMouseOver={playOnHoverEnabled(() => this.video.play())}
+               onMouseOut={playOnHoverEnabled(() => this.video.pause())}
                autoPlay
                loop
                muted
