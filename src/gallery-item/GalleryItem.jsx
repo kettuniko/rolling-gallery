@@ -1,6 +1,8 @@
 import { compose, equals, gt, ifElse, invoker, lte, where } from 'ramda'
 import React, { Component } from 'react'
 
+const invoke = invoker(0)
+
 export default class GalleryItem extends Component {
   constructor(props) {
     super(props)
@@ -22,7 +24,6 @@ export default class GalleryItem extends Component {
   playVideoWithinViewport() {
     const video = this.video
     if (video) {
-      const invoke = invoker(0)
       const isBestInViewPort = compose(
         where({
           top: lte(0),
@@ -41,23 +42,19 @@ export default class GalleryItem extends Component {
   }
 
   playVideo(play) {
-    if (this.props.playOnHover && !play) {
-      this.video.pause()
-    } else {
-      this.video.play()
-    }
+    play ? this.video.play() : this.video.pause()
   }
 
   render() {
-    const { item: { animated, link, mp4 }, onLoad } = this.props
+    const { item: { animated, link, mp4 }, onLoad, playOnHover } = this.props
 
     return animated
       ? <video className='gallery-item'
                src={mp4}
                onCanPlayThrough={onLoad}
                ref={video => this.video = video}
-               onMouseOver={() => this.playVideo(true)}
-               onMouseOut={() => this.playVideo(false)}
+               onMouseOver={() => playOnHover && this.playVideo(true)}
+               onMouseOut={() => playOnHover && this.playVideo(false)}
                autoPlay
                loop
                muted
