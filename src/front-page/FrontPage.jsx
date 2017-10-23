@@ -9,15 +9,15 @@ import Spinner from '../spinner/Spinner.jsx'
 const galleries = [
   'brokengifs',
   'wastedgifs',
-  'earthporn',
+  'slygifs',
   'mildlyinteresting',
   'reactiongifs',
   'gifs',
-  'wallpapers',
+  'chemicalreactiongifs',
   'woahdude',
-  'perfecttiming',
+  'mechanical_gifs',
   'oddlysatisfying',
-  'foodporn',
+  'combinedgifs',
   'unexpected'
 ]
 
