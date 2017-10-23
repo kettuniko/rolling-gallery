@@ -17,8 +17,10 @@ export default class GalleryItem extends Component {
     window.removeEventListener('scroll', this.playVideoWithinViewport)
   }
 
-  componentDidUpdate() {
-    this.playVideoWithinViewport()
+  componentDidUpdate({ item: { id } }) {
+    if (id === this.props.item.id) {
+      this.playVideoWithinViewport()
+    }
   }
 
   playVideoWithinViewport() {
