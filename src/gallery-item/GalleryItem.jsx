@@ -1,3 +1,4 @@
+import { compose, equals, gt, ifElse, invoker, lte, where } from 'ramda'
 import React, { Component } from 'react'
 
 export default class GalleryItem extends Component {
@@ -21,12 +22,21 @@ export default class GalleryItem extends Component {
   playVideoWithinViewport() {
     const video = this.video
     if (video) {
-      const { bottom, top, width } = video.getBoundingClientRect()
-      const topInsideViewPort = top >= 0
-      const bottomInsideViewPort = bottom < window.innerHeight
-      const onlyHorizontalItem = width === window.innerWidth
-      const bestItemInViewPort = topInsideViewPort && bottomInsideViewPort && onlyHorizontalItem
-      bestItemInViewPort ? video.play() : video.pause()
+      const invoke = invoker(0)
+      const isBestInViewPort = compose(
+        where({
+          top: lte(0),
+          bottom: gt(window.innerHeight),
+          width: equals(window.innerWidth)
+        }),
+        invoke('getBoundingClientRect')
+      )
+
+      ifElse(
+        isBestInViewPort,
+        invoke('play'),
+        invoke('pause')
+      )(video)
     }
   }
 
