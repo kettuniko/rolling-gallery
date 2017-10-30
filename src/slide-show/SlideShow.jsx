@@ -23,11 +23,11 @@ const toDuration = ({ mp4 }) =>
     getDuration(mp4) :
     stillImageDuration(window.location.search)
 
-const toSlideShow = ({ onItemDownloaded }) => (chain, item) =>
+const toSlideShow = ({ onDuration }) => (chain, item) =>
   chain
     .then(pause)
     .then(url => Promise.all([item, toDuration(item)]))
-    .then(tap(apply(onItemDownloaded)))
+    .then(tap(apply(onDuration)))
     .then(compose(objOf('waitTime'), last))
     .catch(e => {
       console.log(e)
@@ -67,7 +67,7 @@ export default class SlideShow extends Component {
 
   componentDidMount() {
     showImagesFromGalleryPage(this.props.gallery, {
-      onItemDownloaded: (item, duration) => {
+      onDuration: (item, duration) => {
         this.setState({
           item,
           duration,
