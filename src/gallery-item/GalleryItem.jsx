@@ -1,11 +1,18 @@
-import { compose, equals, gt, ifElse, invoker, lte, where } from 'ramda'
+import { compose, equals, gt, invoker, isNil, lte, where, unless } from 'ramda'
 import React, { Component } from 'react'
 
 const invoke = invoker(0)
 
+const isBestInViewport = where({
+  top: lte(0),
+  bottom: gt(window.innerHeight),
+  width: equals(window.innerWidth)
+})
+
 export default class GalleryItem extends Component {
   constructor(props) {
     super(props)
+    this.playVideo = this.playVideo.bind(this)
     this.playVideoWithinViewport = this.playVideoWithinViewport.bind(this)
   }
 
@@ -17,34 +24,30 @@ export default class GalleryItem extends Component {
     window.removeEventListener('scroll', this.playVideoWithinViewport)
   }
 
-  componentDidUpdate({ item: { id } }) {
-    if (id === this.props.item.id) {
-      this.playVideoWithinViewport()
-    }
+  componentDidUpdate() {
+    this.playVideoWithinViewport()
+  }
+
+  shouldComponentUpdate({ playOnHover }) {
+    return Boolean(playOnHover)
   }
 
   playVideoWithinViewport() {
-    const video = this.video
-    if (video) {
-      const isBestInViewPort = compose(
-        where({
-          top: lte(0),
-          bottom: gt(window.innerHeight),
-          width: equals(window.innerWidth)
-        }),
+    unless(
+      isNil,
+      compose(
+        this.playVideo,
+        isBestInViewport,
         invoke('getBoundingClientRect')
-      )
-
-      ifElse(
-        isBestInViewPort,
-        invoke('play'),
-        invoke('pause')
-      )(video)
-    }
+      ),
+      this.video
+    )
   }
 
   playVideo(play) {
-    play ? this.video.play() : this.video.pause()
+    play
+      ? this.video.play()
+      : this.video.pause()
   }
 
   render() {
