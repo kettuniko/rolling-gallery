@@ -1,4 +1,4 @@
-import { compose, equals, gt, invoker, isNil, lte, where, unless } from 'ramda'
+import { always, compose, equals, gt, invoker, isNil, lte, when, where, unless } from 'ramda'
 import React, { Component } from 'react'
 
 const invoke = invoker(0)
@@ -50,16 +50,24 @@ export default class GalleryItem extends Component {
       : this.video.pause()
   }
 
+  playOnHover(play) {
+    when(
+      Boolean,
+      compose(this.playVideo, always(play)),
+      this.props.playOnHover
+    )
+  }
+
   render() {
-    const { item: { animated, link, mp4 }, onLoad, playOnHover } = this.props
+    const { item: { animated, link, mp4 }, onLoad } = this.props
 
     return animated
       ? <video className='gallery-item'
                src={mp4}
                onCanPlayThrough={onLoad}
                ref={video => this.video = video}
-               onMouseOver={() => playOnHover && this.playVideo(true)}
-               onMouseOut={() => playOnHover && this.playVideo(false)}
+               onMouseOver={() => this.playOnHover(true)}
+               onMouseOut={() => this.playOnHover(false)}
                autoPlay
                loop
                muted
