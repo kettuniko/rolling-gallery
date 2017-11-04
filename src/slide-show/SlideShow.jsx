@@ -9,7 +9,8 @@ import Progressbar from '../progressbar/Progressbar.jsx'
 import Spinner from '../spinner/Spinner.jsx'
 
 const pause = ({ waitTime }) => new Promise(resolve => setTimeout(resolve, waitTime))
-const startImmediately = Promise.resolve({ waitTime: 0 })
+const withNoDelay = { waitTime: 0 }
+const startImmediately = Promise.resolve(withNoDelay)
 const doSlideShow = handlers => reduce(toSlideShow(handlers), startImmediately)
 
 const toSlideShow = ({ onDuration }) => (chain, item) =>
@@ -20,7 +21,7 @@ const toSlideShow = ({ onDuration }) => (chain, item) =>
     .then(compose(objOf('waitTime'), last))
     .catch(e => {
       console.log(e)
-      return Promise.resolve()
+      return Promise.resolve(withNoDelay)
     })
 
 const showImagesFromGalleryPage = curry((gallery, handlers, pageNumber) =>
