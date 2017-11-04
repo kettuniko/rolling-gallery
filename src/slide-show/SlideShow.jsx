@@ -86,7 +86,7 @@ export default class SlideShow extends Component {
     return (
       <div className='slide-show'>
         {duration && <Progressbar key={item.id} duration={duration}/>}
-        {item && <GalleryItem item={item} />}
+        {item && <GalleryItem key={`${item.id}i`} item={item} />}
         {fetching && <div className='slide-show__spinner'><Spinner/></div>}
         {message && <h2 className='slide-show__message'>{message}</h2>}
       </div>
