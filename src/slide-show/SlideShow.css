@@ -19,6 +19,7 @@ body {
 }
 
 .slide-show .gallery-item {
+  background-color: black;
   height: 100vh;
   object-fit: cover;
   width: 100vw;
