@@ -28,10 +28,6 @@ export default class GalleryItem extends Component {
     this.playVideoWithinViewport()
   }
 
-  shouldComponentUpdate({ playOnHover }) {
-    return Boolean(playOnHover)
-  }
-
   playVideoWithinViewport() {
     unless(
       isNil,
