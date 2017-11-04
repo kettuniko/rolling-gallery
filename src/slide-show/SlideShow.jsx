@@ -1,32 +1,21 @@
 import './SlideShow.css'
 
-import { apply, compose, curry, last, multiply, objOf, propOr, reduce, tap } from 'ramda'
+import { apply, compose, curry, last, objOf, reduce, tap } from 'ramda'
 import React, { Component } from 'react'
-import { parse as parseQueryString } from 'query-string'
 import { fetchGallery } from '../fetch-gallery'
-import { getDuration } from '../get-duration'
+import { preloadWithDuration } from '../preload-with-duration'
 import GalleryItem from '../gallery-item/GalleryItem.jsx'
 import Progressbar from '../progressbar/Progressbar.jsx'
 import Spinner from '../spinner/Spinner.jsx'
 
 const pause = ({ waitTime }) => new Promise(resolve => setTimeout(resolve, waitTime))
-
 const startImmediately = Promise.resolve({ waitTime: 0 })
-
-const toMilliseconds = multiply(1000)
-const stillImageDuration = compose(toMilliseconds, propOr(5, 'stillSeconds'), parseQueryString)
-
 const doSlideShow = handlers => reduce(toSlideShow(handlers), startImmediately)
-
-const toDuration = ({ mp4 }) =>
-  mp4 ?
-    getDuration(mp4) :
-    stillImageDuration(window.location.search)
 
 const toSlideShow = ({ onDuration }) => (chain, item) =>
   chain
     .then(pause)
-    .then(url => Promise.all([item, toDuration(item)]))
+    .then(url => Promise.all([item, preloadWithDuration(item)]))
     .then(tap(apply(onDuration)))
     .then(compose(objOf('waitTime'), last))
     .catch(e => {
