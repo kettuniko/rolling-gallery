@@ -16,7 +16,7 @@ const doSlideShow = handlers => reduce(toSlideShow(handlers), startImmediately)
 const toSlideShow = ({ onDuration }) => (chain, item) =>
   chain
     .then(pause)
-    .then(url => Promise.all([item, preloadWithDuration(item)]))
+    .then(() => Promise.all([item, preloadWithDuration(item)]))
     .then(tap(apply(onDuration)))
     .then(compose(objOf('waitTime'), last))
     .catch(e => {
