@@ -19,10 +19,7 @@ const toSlideShow = ({ onDuration }) => (chain, item) =>
     .then(() => Promise.all([item, preloadWithDuration(item)]))
     .then(tap(apply(onDuration)))
     .then(compose(objOf('waitTime'), last))
-    .catch(e => {
-      console.log(e)
-      return Promise.resolve(withNoDelay)
-    })
+    .catch(() => Promise.resolve(withNoDelay))
 
 const showImagesFromGalleryPage = curry((gallery, handlers, pageNumber) =>
   fetchGallery(pageNumber, gallery)
