@@ -9,11 +9,7 @@ const isDisplayable = image => fetchHead(image.link)
 const isImage = compose(contains('i.imgur.com'), prop('link'))
 
 const getGallery = (pageNumber, gallery) =>
-  fetchJson(`https://api.imgur.com/3/gallery/r/${gallery}/time/${pageNumber}`, {
-    headers: {
-      Authorization: 'Client-ID 1400c78269df7bc'
-    }
-  })
+  fetchJson(`https://api.imgur.com/3/gallery/r/${gallery}/time/${pageNumber}`)
 
 export const fetchGallery = curry(
   composeP(
