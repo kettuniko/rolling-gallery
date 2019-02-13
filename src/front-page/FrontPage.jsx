@@ -1,10 +1,10 @@
-import './FrontPage.css'
-import { append, compose, composeP, head, lensProp, map, over, reduce } from 'ramda'
+import { append, compose, composeWith, head, lensProp, map, over, reduce, then } from 'ramda'
 import React, { Component } from 'react'
 import { fetchGallery } from '../fetch-gallery'
 import Footer from '../footer/Footer.jsx'
 import GalleryHead from '../gallery-head/GalleryHead.jsx'
 import Spinner from '../spinner/Spinner.jsx'
+import './FrontPage.css'
 
 const galleries = [
   'brokengifs',
@@ -21,19 +21,15 @@ const galleries = [
   'unexpected'
 ]
 
-const fetchAsGallery = composeP(
-  head,
-  fetchGallery(0)
+const fetchAsGallery = composeWith(then,
+  [head, fetchGallery(0)]
 )
 
 const renderSequentially = onSingleDownloaded => (sequence, current) =>
   sequence.then(() => current.then(onSingleDownloaded))
 
 const renderGalleries = ({ onSingleDownloaded, onAllDownloaded }) => compose(
-  composeP(
-    onAllDownloaded,
-    reduce(renderSequentially(onSingleDownloaded), Promise.resolve())
-  ),
+  composeWith(then,[onAllDownloaded, reduce(renderSequentially(onSingleDownloaded), Promise.resolve())]),
   map(fetchAsGallery)
 )
 

@@ -1,5 +1,5 @@
-import { compose, composeP, forEach, multiply, propOr } from 'ramda'
 import { parse as parseQueryString } from 'query-string'
+import { compose, composeWith, forEach, multiply, propOr, then } from 'ramda'
 
 const stillImageDuration = compose(propOr(5, 'stillSeconds'), parseQueryString)(window.location.search)
 
@@ -13,7 +13,8 @@ const getDurationInSeconds = ({ mp4, link }) =>
     element.addEventListener('error', reject)
   })
 
-export const preloadWithDuration = composeP(
-  multiply(1000),
-  getDurationInSeconds
+export const preloadWithDuration = composeWith(then, [
+    multiply(1000),
+    getDurationInSeconds
+  ]
 )
