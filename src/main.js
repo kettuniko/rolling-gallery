@@ -5,8 +5,6 @@ import ReactDOM from 'react-dom'
 import FrontPage from './front-page/FrontPage.jsx'
 import SlideShow from './slide-show/SlideShow.jsx'
 
-window.onerror = errorMsg => document.body.innerHTML = errorMsg
-
 const render = flip(nAry(2, ReactDOM.render))
 
 const init = compose(
